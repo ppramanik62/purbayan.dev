@@ -125,23 +125,24 @@
   %-----------EXPERIENCE-----------
   \section{EXPERIENCE}
   \resumeSubHeadingListStart \resumeSubheading {\href{https://github.com/liliu-z/stashbase}{StashBase}}{Jul 2026 -- Present}
-  {\underline{Open Source Contributor}}{Remote} \resumeItemListStart
-  \resumeItem{\normalsize{Built the live Markdown editor for a local-first knowledge base on Milkdown Crepe, unifying editing and preview in one surface without losing source fidelity.}}
-  \resumeItem{\normalsize{Hardened Markdown rendering for safety and completeness, and added navigation features (quick open, command palette, history) that made the editor usable day-to-day.}}
-  \resumeItem{\normalsize{Wrote the Shared Agent Contract with Claude and Codex adapters and parity tests across both, and set up the Playwright E2E suite and cross-platform CI gates behind it.}}
+  {\underline{Open Source Contributor} (53 merged PRs)}{Remote} \resumeItemListStart
+  \resumeItem{\normalsize{Built the live Markdown editor for a local-first knowledge base on Milkdown Crepe, unifying editing and preview in one surface without losing source fidelity, with sanitized HTML rendering, Quick Open, and a command palette.}}
+  \resumeItem{\normalsize{Built inline review of Agent edits: readers keep or undo each change inside the document, and a host-side snapshot at the turn boundary records what every Claude, Codex, or OpenCode turn changed, shell writes included.}}
+  \resumeItem{\normalsize{Wrote the Shared Agent Contract with Claude and Codex adapters and parity tests across both, and set up the Playwright E2E suite against the real Electron app, with cross-platform CI gates.}}
   \resumeItemListEnd
   \resumeSubheading {\href{https://samur-ai.in}{SamurAI Studios}}{Apr 2026 -- Jul 2026}
   {\underline{Software Engineer}}{Remote} \resumeItemListStart
   \resumeItem{\normalsize{Built the creative-brief pipeline that turns a client deck into a typed brief: deck ingestion, keyframe extraction, visual captioning, and per-stage evidence an operator console can inspect.}}
   \resumeItem{\normalsize{Rebuilt storyboards from project-owned to scene-owned across the stack: schema migration, scene-scoped APIs, version history with snapshot restore, and a multi-scene frontend workspace, without breaking existing projects.}}
   \resumeItem{\normalsize{Shipped per-beat image and video generation across four model providers, with continuity prompts to hold style between shots, run monitoring, and usage logging.}}
-  \resumeItem{\normalsize{Moved the product UI onto shared primitives and Tailwind CSS v4 tokens, and cut gallery payload sizes through image format optimization.}}
+  \resumeItem{\normalsize{Moved the UI onto shared primitives and Tailwind CSS v4 tokens, and optimized gallery image formats.}}
   \resumeItemListEnd
   \resumeSubheading {\href{https://fiddle.is}{fiddle-factory}}{Dec 2025 -- Apr 2026}
   {\underline{Software Engineer (Contractor)}}{Remote} \resumeItemListStart
-  \resumeItem{\normalsize{Diagnosed and fixed a canvas hydration race condition that left new users with a blank canvas on first load.}}
-  \resumeItem{\normalsize{Built the Storybook setup across four repositories, including a shared component primitive catalogue, with visual regression testing via screenshots.}}
-  \resumeItem{\normalsize{Added PKCE auth and allowlist access control to the dashboard, and made chat sends non-blocking so messages render before the write completes.}}
+  \resumeItem{\normalsize{Traced a hydration race that left every new user with a blank canvas: tldraw mounted before a cold React Query fetch resolved, so I gated the editor mount on data readiness.}}
+  \resumeItem{\normalsize{Added auto-pan to new shapes, a visual component picker in place of a text-only mention menu, and preview theme switching driven by the user's own repository.}}
+  \resumeItem{\normalsize{Set up Storybook across four repositories with stories for all 56 shared primitives, and replaced runtime iframe capture with Storycap screenshots of static builds.}}
+  \resumeItem{\normalsize{Added PKCE auth, verified magic links, and allowlist access to the dashboard; made chat sends optimistic and added Claude pre-flight health checks.}}
   \resumeItemListEnd
   \resumeSubheading {\href{https://fiddle.is}{fiddle-factory}}{May 2025 -- Aug 2025}
   {\underline{Software Engineer Intern}}{Remote} \resumeItemListStart \resumeItem{\normalsize{Migrated the canvas from react-flow to tldraw: custom shapes and tools per component type, preview renderers, and converters that carried existing documents between two canvas models.}}
@@ -161,8 +162,8 @@
   \vspace{-5pt}
   \resumeSubHeadingListStart \resumeProjectHeading
   {\href{https://trovecn.dev}{\textbf{\underline{trove/cn}}} $|$ \underline{Next.js, React, TypeScript, Tailwind CSS}}{2026 -- Present}\\
-  \resumeItemListStart \resumeItem{\normalsize{Open-source registry of interface patterns from real products, rebuilt as copyable React source with live previews beside the implementation.}}
-  \resumeItem{\normalsize{Built with Next.js App Router, Base UI primitives, Motion, Shiki, and the shadcn registry format; released under the MIT license.}}
+  \resumeItemListStart \resumeItem{\normalsize{Rebuilt 30+ UI patterns from real products as copyable React source, installable one at a time via the shadcn CLI.}}
+  \resumeItem{\normalsize{Includes agent UI patterns (prompt composer, tool runs, approval requests, plan checklists), all with live previews.}}
   \resumeItemListEnd \resumeSubHeadingListEnd
   \vspace{-14pt}
 

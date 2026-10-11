@@ -43,7 +43,8 @@ deep without effort. Amber means it needs rehearsal.
 | Resume line                                           | Risk  | Why                                                               |
 | ----------------------------------------------------- | ----- | ----------------------------------------------------------------- |
 | Milkdown Crepe editor, without losing source fidelity | Amber | strong claim, need one concrete hard example                      |
-| Hardened rendering + nav features                     | Green | specifics live in the answer                                      |
+| Sanitized rendering, Quick Open, command palette      | Green | specifics live in the answer                                      |
+| Inline review of Agent edits, turn snapshot           | Amber | newest work, "why the host and not the adapter" is the probe      |
 | Shared Agent Contract, parity tests                   | Amber | best architecture story, most probeable                           |
 | Playwright E2E, cross-platform CI                     | Amber | "how do you stop visual tests being flaky" has a real answer      |
 | Creative-brief pipeline, golden evaluations           | Amber | "golden evaluations" is jargon, be ready to define it             |
@@ -51,6 +52,8 @@ deep without effort. Amber means it needs rehearsal.
 | Multi-provider generation                             | Amber | naming providers means naming how they differ                     |
 | Shared primitives, image format optimization          | Green | roles and format live in the answer                               |
 | Canvas hydration race, Storybook, PKCE                | Green | three solid stories, know the details                             |
+| Auto-pan, component picker, repo-driven themes        | Amber | small features, know how the theme gets out of the repo           |
+| Storycap screenshots of static builds                 | Green | clean "I removed complexity" story                                |
 | react-flow to tldraw migration                        | Green | best story on the resume, follow-up is always the data conversion |
 | StackBlitz to e2b                                     | Green | clean tradeoff, real constraint                                   |
 | Languages (TS, JS)                                    | Green | strong everywhere, expect a type-system question                  |
@@ -89,7 +92,11 @@ I own three areas:
 
 - The Markdown editor — a live editing surface, not a split pane.
 - The agent panel — Claude and Codex both run behind one interface.
-- The renderer architecture around both.
+- Where the two meet — reviewing what the Agent changed in a document, and pointing the Agent
+  at a passage.
+
+I also landed some large renderer refactors, but they're not on the resume. The volume there was
+mostly agent-driven, and I won't claim a 1,600-file diff as my own work.
 
 **Local-first, why?**
 
@@ -155,6 +162,55 @@ Stripping it would lose data; rendering it makes every note ugly.
 Quick Open is navigation across files, the outline is navigation inside one. I moved the outline
 into the Files sidebar rather than giving it its own panel — one place to go find things.
 
+### Inline review of Agent edits — how does it work?
+
+Two pieces, shipped a couple of weeks apart.
+
+First, `suggest_edits`. The Agent sends a whole revised document instead of writing the file.
+The host keeps the proposal in memory, scoped to the caller's project, and the editor shows it
+as tracked insertions and deletions. The reader accepts or rejects each change. Accepted text
+goes through the normal versioned save, and rejected text never touches disk.
+
+Then a user told us they couldn't find it. The diff only appeared when the Agent chose to call
+that tool, and nothing in the product said so. So we flipped the default: Agents write directly,
+and after any turn that changed Markdown the chat shows a "Changed in this turn" card. Review
+opens the document with that turn's changes marked, each with Keep or Undo.
+
+**Why track changes in the host instead of in each adapter?**
+
+Every runtime passes through one place, the socket the host attaches to a folder. When a prompt
+arrives, the host holds it until it has a snapshot of the folder's Markdown, and at turn end it
+rescans and diffs. Claude, Codex, and OpenCode all go through that, and so do shell writes like
+`sed`, which no adapter would ever see as an edit. Putting it in the adapters would have meant
+three implementations that still missed the shell.
+
+**How did you reuse the review UI?**
+
+I reversed it. The editor holds the file the turn left behind, and the "proposal" is the text
+from before the turn. Undo restores old text through the same versioned save, Keep all leaves
+the file byte-identical, and the colours are swapped so additions still read as additions.
+
+**What if the file changed after the turn?**
+
+The existing version check refuses it, and the card says so in one sentence. Same for an expired
+record or changed frontmatter. Records live in memory with per-folder and age limits, so
+"expired" is a real state the UI has to handle.
+
+### Ask Agent and citations — not on the resume, but if they ask about agent UX
+
+Selecting text in a document offers Ask Agent. It binds the exact selection as a passage chip in
+the composer, and the words travel in the prompt, so editing the document later can't change
+what was asked about.
+
+Going the other way, the Agent is told to cite as `path#:~:text=phrase`. Clicking the link opens
+the file and runs Find for the phrase, or says the file no longer contains it.
+
+**Anything surprising?**
+
+A real end-to-end turn turned up an old bug: OpenCode streams the user's prompt back as if it
+were a reply, so Default chats showed your own message twice. I only found it because I drove a
+real turn instead of trusting the unit tests.
+
 ### Explain the Shared Agent Contract
 
 StashBase drives more than one coding agent. Claude Code and Codex run as local processes with
@@ -210,25 +266,19 @@ time a legitimate visual change lands.
 You don't spawn a real one. There's a deterministic fake that speaks the Codex app-server
 protocol, so the panel exercises the real code path against a scripted peer.
 
-### You refactored the renderer architecture — what was wrong with it?
+### Your name is on huge renderer refactors — what was your part?
 
-The directory layout implied layering — app on features on store on common — but nothing
-enforced it, so lower layers imported back upward. Store reached into the agent panel for the
-agent catalog, common imported from four different features, common and store imported each
-other — a cycle. Ordinary cause: shared vocabulary got written wherever it was needed first, and
-nobody promoted it when a second feature needed it too.
+Be straight about it. I opened and landed them, including the one that replaced the renderer
+with a layered frontend, but the code volume was mostly agent-driven. What I can speak to is the
+problem and the rule, not every file.
 
-**Moving files isn't cosmetic?**
+The problem: the directory layout implied layers (app on features on store on common), but
+nothing enforced them, so lower layers imported back upward. There was even a cycle between
+common and store. The fix that lasts is lint rules with per-layer import restrictions, because
+moving files alone only lasts one pull request.
 
-Moving files alone lasts one pull request. What matters is I added linting with per-layer import
-restrictions — one rule block per feature naming the siblings it can't reach, each pointing at
-where shared code should go instead. There was no lint tooling at all before that.
-
-**Did you have to break the rules anywhere?**
-
-Tests are exempt — a renderer test legitimately imports a feature component to render it. I
-calibrated the production rules so the codebase lands clean rather than shipping a config with
-hundreds of warnings nobody reads.
+If they push past that, say it plainly: that's where my depth stops, and the editor and agent
+review work are where I can go deep.
 
 ---
 
@@ -402,6 +452,27 @@ Screenshot timing. The naive approach waits a fixed number of milliseconds — t
 or too long and slow. Instead I observe the DOM for the actual rendered content and treat its
 appearance as the ready signal.
 
+### The canvas features — what was interesting in them?
+
+Three small ones, each with one real decision.
+
+- **Auto-pan.** A shape created off-screen used to be invisible. I wrote a reusable
+  `zoomToNewSelection` utility so any feature that creates shapes can bring them into view,
+  instead of each one doing its own camera math.
+- **Component picker.** The mention menu was a text list, so you had to remember component
+  names. I replaced it with a grid of thumbnails, so you browse and pick.
+- **Theme switching.** The preview toolbar switches themes, but the themes aren't hardcoded. They
+  come from the user's repository at runtime, so the preview matches the codebase it's for.
+
+### Storycap — what did that replace and why?
+
+Screenshots used to be captured at runtime from inside an iframe. That was complex and flaky,
+because you're timing a live render. I switched to Storycap against a static Storybook build:
+build once, screenshot every story. Two pieces made it reliable. A MutationObserver detects when
+a story's content has actually rendered, instead of waiting a fixed number of milliseconds. And
+on the build server, a sequential in-memory queue stops concurrent Storybook builds from
+overwriting each other.
+
 ### PKCE — explain the flow and why you need it
 
 Proof Key for Code Exchange. The plain authorisation code flow assumes the client can hold a
@@ -411,7 +482,14 @@ returned code for tokens, it sends the original verifier, and the server checks 
 stored challenge. An attacker who intercepts the authorisation code can't use it — no verifier,
 and can't derive it from the hash.
 
-### What does non-blocking chat mean?
+### Verified magic links and health checks?
+
+Magic links: the dashboard verifies the email is real before sending a sign-in link, so the
+link can't be used to probe or spam arbitrary addresses. Health checks: a `/api/health/claude`
+endpoint the app calls before sending, plus shared Anthropic error handling, so an outage shows
+one consistent message instead of a hung chat.
+
+### What does optimistic chat sends mean?
 
 The original send flow waited on everything before the UI moved — write to the database,
 invalidate the cache, wait for the refetch, then render. Several round trips before the user sees
@@ -542,6 +620,13 @@ A JSON manifest describing each component — its files, dependencies, registry 
 Getting one add command to pull the correct files plus transitive dependencies was the fiddly
 part. I generate the registry JSON from component metadata rather than maintaining it by hand.
 
+**Why agent UI patterns?**
+
+Because that's what I build at StashBase. A prompt composer, a tool run, an approval request, and a
+plan checklist show up in every agent product, and each one has a hard state to get right: a tool
+run that's still streaming, or an approval the user hasn't answered yet. There are 34 registry
+items, and "30+" on the resume counts the patterns, not the helper hooks.
+
 **Dozens of animated previews on one page — does that not crawl?**
 
 That was the main performance problem. Every preview's a live component with real motion, so
@@ -599,7 +684,8 @@ agent protocol contracts, not just React.
 - **Number check:** four model providers, four Storybook repos, 56 primitives, ~84 files on the
   tldraw migration. Know the shape even where I don't remember the exact number.
 - **Scope check:** "who else worked on this" — say what was mine versus contributed to. StashBase
-  is open source and public, so precision there costs nothing.
+  is open source and public, so precision there costs nothing. The big refactor PRs are public
+  too; if asked, say they were agent-driven and steer back to the editor and review work.
 - **Silence trap:** narrate instead of pausing — "the interesting part of that one was X, let me
   start there."
 - **Depth cliff:** it keeps going until I can't answer. Reaching the bottom isn't the failure —
