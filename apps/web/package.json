@@ -5,10 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "bun run typecheck && vite build",
+    "build": "bun run typecheck && vite build && bun scripts/prerender-posts.ts",
     "preview": "vite preview",
     "typecheck": "tsc -b --noEmit",
-    "sync:github": "bun scripts/sync-github.ts"
+    "sync:github": "bun scripts/sync-github.ts",
+    "og:posts": "bun scripts/og-posts.ts"
   },
   "dependencies": {
     "@fontsource-variable/newsreader": "^5.3.0",
