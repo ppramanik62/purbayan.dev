@@ -13,7 +13,7 @@ export interface ReadingSection {
   items: readonly ReadingItem[]
 }
 
-/** What I've read, grouped into sections. Each section collapses on /reading. */
+/** What I've read, grouped into sections on /reading. */
 export const reading: readonly ReadingSection[] = [
   {
     title: "Databases",

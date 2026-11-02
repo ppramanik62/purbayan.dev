@@ -1,13 +1,12 @@
-# portfolio
+# purbayan.me
 
-developer portfolio — tokyo night, monospace everything, and maybe a few secrets.
+My personal site, kept like a paper notebook: projects, experience, writing, reading and open source.
 
 ## stack
 
-- React 19, TypeScript, Vite
-- Tailwind CSS 4, Radix UI, shadcn/ui
-- Motion
-- Iosevka mono, Tokyo Night
+- React 19, TypeScript, Vite, React Router
+- Tailwind CSS 4
+- Newsreader and Spline Sans Mono
 
 ## run locally
 
@@ -23,9 +22,15 @@ bun run build
 bun preview
 ```
 
+The build also writes `dist/writing/<slug>.html` for every post, so link previews show the post's title and thumbnail.
+
 ## content
 
-Blog posts live in `src/content/blog/*.md`. Add a new Markdown file with frontmatter:
+Everything the site says lives in `src/data/`.
+
+Projects, open-source PRs, the contribution heatmap and the avatar come from GitHub. A daily workflow refreshes them; to do it by hand, run `bun run sync:github` (needs `gh` logged in).
+
+Posts live in `src/content/blog/*.md`. The filename becomes the slug:
 
 ```md
 ---
@@ -37,21 +42,11 @@ readingTime: "4 min read"
 ---
 ```
 
-The filename becomes the route slug.
+Run `bun run og:posts` to draw its thumbnail. Sidenotes are `[^id]` in the text and `[^id]: the note` on its own line.
 
 ## deployment
 
-This app uses React Router with browser-history routes. Static hosts must rewrite nested
-routes back to `index.html` so direct visits like `/projects/mdt` and `/blog/<slug>` load
-correctly.
-
-The Vite build copies `public/_redirects` into `dist/_redirects`:
-
-```txt
-/* /index.html 200
-```
-
-This works for Cloudflare Pages and Netlify-style static redirects.
+Cloudflare Pages. Paths without a file fall back to `index.html` through Pages' single-page-app mode, so there is no `_redirects` catch-all and no `404.html`; either would hide the prerendered posts.
 
 ## license
 
