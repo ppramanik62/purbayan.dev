@@ -47,17 +47,13 @@ cd apps/vault && bun run preview   # Preview production build
 
 **Routing:** React Router DOM v7. Routes defined in `src/App.tsx`.
 
-**Data layer:** All content (projects, experience, skills, blog posts) lives as TypeScript files in `src/data/`. No CMS or API calls — edit these files to update site content.
+**Data layer:** All content lives as TypeScript files in `src/data/`. No CMS or runtime API calls. The GitHub snapshot (`src/data/github.json`, `public/avatar.png`) is regenerated with `bun run sync:github` from `apps/web`. Post thumbnails come from `bun run og:posts`. A daily workflow (`.github/workflows/sync-github.yml`) runs both. Details in `apps/web/CLAUDE.md`.
 
 **Path alias:** `@` maps to `src/` (configured in both `vite.config.ts` and `tsconfig.app.json`).
 
-**Styling:** Tailwind CSS 4. The palette lives as `--c-*` custom properties in `src/index.css` and is exposed to Tailwind through `@theme inline` (`bg-ground`, `text-ink`, `text-dim`, `text-faint`, `border-line`, `text-brand`). Use `cn()` from `src/lib/utils.ts` for conditional classnames. A trimmed set of shadcn/ui primitives lives in `src/components/ui/`.
+**Design:** a paper notebook. `src/components/layout.tsx` draws the dated header, the red margin rule and the footer; pages are built from `Row` (`src/components/notebook.tsx`), a margin note beside the writing.
 
-**Theming:** dark only. `data-theme="dark"` is hardcoded on `<html>` in `index.html` so Tailwind's `dark:` variant still resolves for the shadcn primitives; there is no toggle, no light palette, and no `prefers-color-scheme` branch. The palette is a single `:root` block.
-
-**Inspector easter egg:** press `i` anywhere to overlay inspector chrome on the page (`src/components/inspector-mode.tsx`). Esc exits.
-
-**Hero canvas:** `src/components/hero-canvas.tsx` is an imperative canvas with a real object model — hit-testing, drag-to-move, marquee select, Alt/middle-drag pan. It is deliberately _not_ driven by React state; per-frame re-renders would tank it.
+**Styling:** Tailwind CSS 4. The palette lives as `--c-*` custom properties in `src/index.css` and is exposed through `@theme inline` (`bg-paper`, `text-ink`, `text-dim`, `text-faint`, `border-rule`, `text-pen`, `text-pencil`). Light only. Use `cn()` from `src/lib/utils.ts` for conditional classnames.
 
 ## Vault App Architecture (`apps/vault`)
 
@@ -69,7 +65,7 @@ cd apps/vault && bun run preview   # Preview production build
 
 ## Design Conventions
 
-- **Theme:** `apps/web` is dark-only and uses the palette described above. `apps/vault` is still on Tokyo Night and has not been migrated yet — the two intentionally diverge for now.
-- **Typography:** Bricolage Grotesque (display, `font-display`) and Instrument Sans (body, `font-sans`), self-hosted via `@fontsource-variable`. Monospace is system-only, for code blocks.
-- **Motion:** `motion` v12. Any component that hides content while animating must opt out under `prefers-reduced-motion` via `useReducedMotion()` — motion writes inline styles, so the global CSS reduced-motion rule cannot reach it.
+- **Theme:** `apps/web` is a light paper notebook. `apps/vault` is still on Tokyo Night and has not been migrated yet. The two intentionally diverge for now.
+- **Typography:** Newsreader (body, `font-serif`) and Spline Sans Mono (margin notes, `font-mono`), self-hosted via `@fontsource-variable`. Code blocks use the system monospace.
+- **Motion:** CSS transitions only. The global `prefers-reduced-motion` rule in `index.css` covers them.
 - **No new dependencies** without good reason — the stack is intentionally lean
