@@ -1,0 +1,58 @@
+# Refreshes the GitHub snapshot the site renders (projects, contribution calendar,
+# avatars, open-source PRs) and draws thumbnails for new blog posts, once a day.
+# Commits only when something changed.
+# The push to main is what makes the host redeploy.
+name: Sync GitHub data
+
+on:
+  schedule:
+    - cron: "30 0 * * *" # 06:00 IST
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-github
+  cancel-in-progress: true
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.3.3
+
+      - run: bun install --frozen-lockfile
+
+      - name: Sync
+        working-directory: apps/web
+        env:
+          # A personal token sees private contributions in the heatmap; the
+          # built-in token only sees public ones. Either works.
+          GH_TOKEN: ${{ secrets.GH_SYNC_TOKEN || github.token }}
+        run: bun run sync:github
+
+      - name: Draw thumbnails for new posts
+        working-directory: apps/web
+        run: bun run og:posts
+
+      - run: bunx oxfmt apps/web/src/data/github.json
+
+      - name: Commit if changed
+        env:
+          HUSKY: "0"
+        run: |
+          paths="apps/web/src/data/github.json apps/web/public/avatar.png apps/web/public/oss apps/web/public/og"
+          if [ -z "$(git status --porcelain -- $paths)" ]; then
+            echo "No changes."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add $paths
+          git commit -m "chore(web): sync github data"
+          git push
