@@ -28,7 +28,7 @@ export const experiences: readonly Experience[] = [
     url: "https://samur-ai.in",
     role: "Software engineer",
     period: "Apr – Jul 2026",
-    summary: "Tools for making films and ads with AI.",
+    summary: "A creative workspace for producing marketing ads with agents.",
     work: [
       "Built a pipeline that reads a creative brief from a slide deck and turns it into a structured story the rest of the product works from.",
       "Built storyboard workspaces end to end: the APIs, Postgres storage, version history and the UI.",
@@ -41,7 +41,7 @@ export const experiences: readonly Experience[] = [
     url: "https://fiddle.is",
     role: "Software engineer, contract",
     period: "Dec 2025 – Apr 2026",
-    summary: "An AI tool for designing UI components.",
+    summary: "A workspace for teams to design in their codebase.",
     work: [
       "Worked on the canvas: theme switching, auto-pan, a component grid and an element inspector.",
       "Fixed a race that broke the canvas on first load for new users.",
