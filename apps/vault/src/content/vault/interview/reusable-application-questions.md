@@ -55,7 +55,7 @@ panics.
 
 ## Do you have a GitHub profile or personal website?
 
-- GitHub: <https://github.com/PPRAMANIK62>
+- GitHub: <https://github.com/ppramanik62>
 - Website: <https://purbayan.me>
 
 ## What are your must-haves and nice-to-haves in a company?

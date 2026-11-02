@@ -16,7 +16,7 @@ Everything you need to recall before walking into any technical interview. Every
 
 **Links:**
 
-- GitHub: [PPRAMANIK62](https://github.com/PPRAMANIK62)
+- GitHub: [ppramanik62](https://github.com/ppramanik62)
 - Portfolio: [purbayan.me](https://purbayan.me)
 - Email: purbayan.dev@gmail.com
 - LinkedIn: [Profile](https://linkedin.com/in/ppramanik62)

@@ -701,7 +701,7 @@ agent protocol contracts, not just React.
 | -------------------- | --------------------------------------------- |
 | Storybook repos      | 4                                             |
 | Model providers      | 4 — Runway, Veo, Seedance, Kling              |
-| StashBase            | open source, commits public under PPRAMANIK62 |
+| StashBase            | open source, commits public under ppramanik62 |
 | shadcn-ui primitives | 56                                            |
 | tldraw migration     | ~84 files, May–Aug 2025                       |
 | SamurAI              | 4 codebases, Apr–Jul 2026                     |
