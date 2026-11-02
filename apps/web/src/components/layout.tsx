@@ -39,7 +39,7 @@ export function Layout() {
   }, [pathname])
 
   return (
-    <div className="mx-auto max-w-[860px] px-5 pt-14 pb-20 max-[680px]:pt-8">
+    <div className="mx-auto flex min-h-dvh max-w-[860px] flex-col px-5 pt-14 pb-10 max-[680px]:pt-8">
       <header className="grid grid-cols-[var(--margin)_minmax(0,1fr)] items-end gap-x-[var(--gutter)] border-b border-rule pb-[22px] max-[680px]:grid-cols-1">
         <div className="pb-1.5 text-right max-[680px]:pb-1 max-[680px]:text-left">
           <span className="block text-[17px] leading-tight text-dim italic">{todayLong()}</span>
@@ -73,7 +73,7 @@ export function Layout() {
       </header>
 
       {/* The red margin rule runs down the page between the margin notes and the writing. */}
-      <main className="relative before:absolute before:inset-y-0 before:left-[calc(var(--margin)+var(--gutter)/2)] before:w-px before:bg-pen/35 max-[680px]:before:hidden">
+      <main className="relative flex-1 before:absolute before:inset-y-0 before:left-[calc(var(--margin)+var(--gutter)/2)] before:w-px before:bg-pen/35 max-[680px]:before:hidden">
         <ErrorBoundary resetKey={pathname}>
           <Outlet />
         </ErrorBoundary>
