@@ -34,7 +34,9 @@ function Clock() {
 export function Layout() {
   const { pathname } = useLocation()
 
-  useEffect(() => window.scrollTo(0, 0), [pathname])
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [pathname])
 
   return (
     <div className="mx-auto max-w-[860px] px-5 pt-14 pb-20 max-[680px]:pt-8">
