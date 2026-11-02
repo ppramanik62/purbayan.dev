@@ -71,4 +71,4 @@ I also skipped pressure sensitivity. The Pointer Events API exposes `pressure` o
 - Framer Motion for the panel animations
 - Canvas API for all drawing, compositing, and export
 
-The repo is at github.com/PPRAMANIK62/canvas-kit, and there's a live demo at canvas-kit.vercel.app.
+The repo is at github.com/ppramanik62/canvas-kit, and there's a live demo at canvas-kit.vercel.app.

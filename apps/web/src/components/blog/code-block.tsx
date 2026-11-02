@@ -29,22 +29,22 @@ export function CodeBlock({ language, code }: { language: string; code: string }
   }
 
   return (
-    <div className="group relative bg-muted/50 border border-border/50 rounded-lg">
+    <div className="group relative rounded-sm border border-rule bg-code text-code-ink">
       <div className="absolute top-2 right-2 flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-150">
-        <span className="font-mono text-xs text-muted-foreground bg-muted/80 px-2 py-0.5 rounded">
+        <span className="rounded-xs px-2 py-0.5 font-code text-xs text-code-ink/60">
           {language}
         </span>
         <button
           type="button"
           onClick={handleCopy}
-          className="text-muted-foreground hover:text-foreground bg-muted/80 p-1 rounded transition-colors duration-150"
+          className="rounded-xs p-1 text-code-ink/60 transition-colors duration-150 hover:text-code-ink"
           aria-label="Copy code"
         >
-          {copied ? <Check className="size-3.5 text-green-400" /> : <Copy className="size-3.5" />}
+          {copied ? <Check className="size-3.5 text-tokyo-green" /> : <Copy className="size-3.5" />}
         </button>
       </div>
       <pre className="p-4 overflow-x-auto">
-        <code className="font-mono text-sm">
+        <code className="font-code text-[13.5px] leading-relaxed">
           {tokens ? (
             tokens.map((t, i) => (
               <span key={i} className={t.className || undefined}>
@@ -52,7 +52,7 @@ export function CodeBlock({ language, code }: { language: string; code: string }
               </span>
             ))
           ) : (
-            <span className="text-secondary-foreground">{code}</span>
+            <span>{code}</span>
           )}
         </code>
       </pre>

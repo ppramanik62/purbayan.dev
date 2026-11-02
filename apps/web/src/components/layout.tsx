@@ -1,28 +1,101 @@
-import { Outlet, useLocation } from "react-router-dom"
-import { ScrollToTop } from "@/components/scroll-to-top"
-import { Navbar } from "@/components/navbar"
-import { Footer } from "@/components/footer"
-import { InspectorMode } from "@/components/inspector-mode"
+import { useEffect, useState } from "react"
+import { NavLink, Outlet, useLocation, Link } from "react-router-dom"
+import { SOCIAL } from "@/data/social-links"
+import { clock, todayLong } from "@/lib/dates"
+import { cn } from "@/lib/utils"
 import { ErrorBoundary } from "@/components/error-boundary"
 
-/** Routes that render their own ending instead of the shared contact footer. */
-const NO_FOOTER = ["/resume", "/404"]
+const NAV = [
+  { label: "Home", to: "/" },
+  { label: "Projects", to: "/projects" },
+  { label: "Experience", to: "/experience" },
+  { label: "Writing", to: "/writing" },
+  { label: "Reading", to: "/reading" },
+  { label: "Open source", to: "/open-source" },
+] as const
+
+const FOOT_LINKS = [
+  { label: "github", href: SOCIAL.github.url },
+  { label: "linkedin", href: SOCIAL.linkedin.url },
+  { label: "x", href: SOCIAL.x.url },
+  { label: "email", href: SOCIAL.email.url },
+  { label: "resume", href: "/resume/resume.pdf" },
+] as const
+
+function Clock() {
+  const [time, setTime] = useState(clock)
+  useEffect(() => {
+    const id = setInterval(() => setTime(clock()), 30_000)
+    return () => clearInterval(id)
+  }, [])
+  return <span>{time} IST</span>
+}
 
 export function Layout() {
-  const location = useLocation()
-  const showFooter = !NO_FOOTER.includes(location.pathname)
+  const { pathname } = useLocation()
+
+  useEffect(() => window.scrollTo(0, 0), [pathname])
 
   return (
-    <div className="flex min-h-screen flex-col">
-      <ScrollToTop />
-      <Navbar />
-      <main className="flex-1">
-        <ErrorBoundary resetKey={location.pathname}>
+    <div className="mx-auto max-w-[860px] px-5 pt-14 pb-20 max-[680px]:pt-8">
+      <header className="grid grid-cols-[var(--margin)_minmax(0,1fr)] items-end gap-x-[var(--gutter)] border-b border-rule pb-[22px] max-[680px]:grid-cols-1">
+        <div className="pb-1.5 text-right max-[680px]:pb-1 max-[680px]:text-left">
+          <span className="block text-[17px] leading-tight text-dim italic">{todayLong()}</span>
+          <span className="mt-0.5 block font-mono text-[11.5px] text-faint">
+            Kolkata · <Clock />
+          </span>
+        </div>
+        <Link
+          to="/"
+          className="font-serif text-[clamp(30px,5vw,44px)] leading-[1.05] font-medium tracking-[-0.01em] italic hover:text-pen"
+        >
+          Purbayan Pramanik
+        </Link>
+        <nav className="col-start-2 mt-4 flex flex-wrap gap-x-[22px] gap-y-1 text-[17px] max-[680px]:col-start-1">
+          {NAV.map((item) => (
+            <NavLink
+              key={item.to}
+              to={item.to}
+              end={item.to === "/"}
+              className={({ isActive }) =>
+                cn(
+                  "border-b-[1.5px] pb-0.5 transition-colors",
+                  isActive ? "border-pen text-ink" : "border-transparent text-dim hover:text-ink",
+                )
+              }
+            >
+              {item.label}
+            </NavLink>
+          ))}
+        </nav>
+      </header>
+
+      {/* The red margin rule runs down the page between the margin notes and the writing. */}
+      <main className="relative before:absolute before:inset-y-0 before:left-[calc(var(--margin)+var(--gutter)/2)] before:w-px before:bg-pen/35 max-[680px]:before:hidden">
+        <ErrorBoundary resetKey={pathname}>
           <Outlet />
         </ErrorBoundary>
       </main>
-      {showFooter && <Footer />}
-      <InspectorMode />
+
+      <footer className="mt-14 grid grid-cols-[var(--margin)_minmax(0,1fr)] gap-x-[var(--gutter)] border-t border-rule pt-[18px] font-mono text-[12.5px] text-faint max-[680px]:grid-cols-1 max-[680px]:gap-y-2">
+        <span className="max-[680px]:hidden" />
+        <div className="flex flex-wrap justify-between gap-2.5">
+          <span>Written by hand, more or less.</span>
+          <span className="flex flex-wrap gap-4">
+            {FOOT_LINKS.map((l) => (
+              <a
+                key={l.label}
+                href={l.href}
+                target="_blank"
+                rel="noreferrer"
+                className="hover:text-pen"
+              >
+                {l.label}
+              </a>
+            ))}
+          </span>
+        </div>
+      </footer>
     </div>
   )
 }

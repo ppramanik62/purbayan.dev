@@ -1,179 +1,106 @@
 @import "tailwindcss";
-/* Supplies animate-in / animate-out used by the dialog and sheet primitives. */
-@import "tw-animate-css";
 
 /*
-  The site is dark only. `data-theme="dark"` is hardcoded on <html> in index.html
-  so Tailwind's `dark:` variant (used by the shadcn button) still resolves — there
-  is no runtime toggle and no light palette to fall back to.
-
-  Raw props are prefixed --c-* deliberately: shadcn's --muted and --accent are surface
-  colours, while this design's "muted"/"accent" are a text colour and a signal colour.
-  Sharing the names would make command-palette hover states flood with the accent.
+  A light, paper notebook. One palette, no dark mode.
+  Raw values are --c-*; Tailwind reads them through @theme inline.
 */
-@custom-variant dark (&:is([data-theme="dark"] *));
 
 @theme inline {
-  --font-display: "Bricolage Grotesque Variable", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  --font-sans:
-    "Instrument Sans Variable", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial,
-    sans-serif;
-  --font-mono:
-    ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  --font-serif: "Newsreader Variable", Georgia, serif;
+  --font-mono: "Spline Sans Mono Variable", ui-monospace, monospace;
+  --font-code: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
-  /* This design's palette */
-  --color-ground: var(--c-ground);
-  --color-raise: var(--c-raise);
-  --color-sink: var(--c-sink);
+  --color-paper: var(--c-paper);
+  --color-card: var(--c-card);
   --color-ink: var(--c-ink);
   --color-dim: var(--c-dim);
   --color-faint: var(--c-faint);
-  --color-line: var(--c-line);
-  --color-line-2: var(--c-line-2);
-  --color-brand: var(--c-brand);
-  --color-brand-ink: var(--c-brand-ink);
-  --color-brand-wash: var(--c-brand-wash);
-
-  /* shadcn compatibility — button / command / dialog / sheet read these */
-  --color-background: var(--c-ground);
-  --color-foreground: var(--c-ink);
-  --color-popover: var(--c-raise);
-  --color-popover-foreground: var(--c-ink);
-  --color-primary: var(--c-brand);
-  --color-primary-foreground: var(--c-brand-ink);
-  --color-secondary: var(--c-sink);
-  --color-secondary-foreground: var(--c-ink);
-  --color-muted: var(--c-sink);
-  --color-muted-foreground: var(--c-dim);
-  --color-accent: var(--c-sink);
-  --color-accent-foreground: var(--c-ink);
-  --color-destructive: var(--c-destructive);
-  --color-border: var(--c-line);
-  --color-input: var(--c-line);
-  --color-ring: var(--c-brand);
+  --color-rule: var(--c-rule);
+  --color-pen: var(--c-pen);
+  --color-pencil: var(--c-pencil);
+  --color-tape: var(--c-tape);
+  --color-code: var(--c-code);
+  --color-code-ink: var(--c-code-ink);
 
   /*
-    Syntax-highlight palette. The names are legacy — src/lib/syntax-highlighter.ts
-    is a hand-written tokenizer that emits `text-tokyo-*` classes across ~70 call
-    sites. Retuning the values here is far cheaper than renaming all of them, and
-    these are deliberately desaturated so they don't fight the lime accent.
+    Syntax colours, in the notebook's inks. src/lib/syntax-highlighter.ts emits
+    `text-tokyo-*`, `text-muted-foreground` and `text-secondary-foreground`, so
+    those names stay.
   */
-  --color-tokyo-green: var(--c-syn-string);
-  --color-tokyo-red: var(--c-syn-error);
-  --color-tokyo-yellow: var(--c-syn-type);
-  --color-tokyo-orange: var(--c-syn-number);
-  --color-tokyo-magenta: var(--c-syn-keyword);
-  --color-tokyo-cyan: var(--c-syn-func);
-  --color-tokyo-teal: var(--c-syn-func);
-
-  --ease-brand: cubic-bezier(0.22, 1, 0.36, 1);
-  --ease-brand-out: cubic-bezier(0.16, 1, 0.3, 1);
-
-  --radius: 0.625rem;
+  --color-tokyo-magenta: #9c3626; /* keywords: red pen */
+  --color-tokyo-cyan: #3f5f86; /* types and functions: blue pencil */
+  --color-tokyo-teal: #3f5f86;
+  --color-tokyo-green: #5d7535; /* strings: olive */
+  --color-tokyo-orange: #a3601c; /* numbers: ochre */
+  --color-tokyo-yellow: #86651a; /* constants */
+  --color-tokyo-red: #b4432f;
+  --color-muted-foreground: #958c7c; /* comments */
+  --color-secondary-foreground: #6b6458; /* punctuation */
 }
 
 @layer base {
-  /* Light — the base palette */
   :root {
-    --c-ground: #0b0b0c;
-    --c-raise: #141416;
-    --c-sink: #101012;
-    --c-ink: #f2f2f0;
-    --c-dim: #8b8b87;
-    --c-faint: #63635f;
-    --c-line: rgba(242, 242, 240, 0.11);
-    --c-line-2: rgba(242, 242, 240, 0.22);
-    --c-brand: #d0ff3c;
-    --c-brand-ink: #0b0b0c;
-    --c-brand-wash: rgba(208, 255, 60, 0.11);
-    --c-destructive: #ff6b6b;
-    --c-canvas-dot: rgba(242, 242, 240, 0.15);
-    --c-canvas-ink: rgba(242, 242, 240, 0.2);
-    --c-blur: 11, 11, 12;
+    --c-paper: #f3eee3;
+    --c-card: #fbf8f1;
+    --c-ink: #24211c;
+    --c-dim: #5e584d;
+    --c-faint: #8a8170;
+    --c-rule: #ddd4c2;
+    --c-pen: #b4432f;
+    --c-pencil: #4f6a8a;
+    --c-tape: rgba(222, 205, 160, 0.7);
+    --c-code: #fbf8f1;
+    --c-code-ink: #24211c;
 
-    --c-syn-string: #a3be8c;
-    --c-syn-error: #e86a6a;
-    --c-syn-type: #e6c384;
-    --c-syn-number: #e9a66b;
-    --c-syn-keyword: #c3a6ff;
-    --c-syn-func: #82aaff;
+    /* The margin column, and where its red rule sits. */
+    --margin: 150px;
+    --gutter: 32px;
   }
-}
 
-@layer base {
   html {
-    overflow-y: scroll;
-    background: var(--c-ground);
+    background: var(--c-paper);
     scroll-behavior: smooth;
   }
 
   body {
     margin: 0;
     min-height: 100vh;
-    background: var(--c-ground);
+    background: var(--c-paper);
     color: var(--c-ink);
-    font-family: var(--font-sans);
-    font-size: 17px;
-    line-height: 1.65;
-    letter-spacing: -0.005em;
-    font-synthesis: none;
-    text-rendering: optimizeLegibility;
+    font-family: var(--font-serif);
+    font-size: 18px;
+    line-height: 1.6;
+    font-optical-sizing: auto;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    overflow-x: hidden;
-    transition:
-      background-color 420ms var(--ease-brand),
-      color 420ms var(--ease-brand);
   }
 
   ::selection {
-    background: var(--c-brand);
-    color: var(--c-brand-ink);
+    background: var(--c-pen);
+    color: var(--c-paper);
   }
 
   *:focus-visible {
-    outline: 2px solid var(--c-brand);
+    outline: 2px solid var(--c-pen);
     outline-offset: 3px;
     border-radius: 2px;
   }
 
-  [data-slot="command-input"]:focus-visible {
-    outline: none;
+  @media (max-width: 680px) {
+    body {
+      font-size: 17px;
+    }
   }
 }
 
-@utility label-xs {
-  font-size: 11px;
-  font-weight: 500;
-  line-height: 1.5;
-  text-transform: uppercase;
-  letter-spacing: 0.19em;
-}
-
-/* Inspector easter egg (press `i`): swap in a devtools-style picker cursor —
-   crosshair arms around a small filled dot. Drawn dark-on-white so one asset
-   reads on every theme state. */
-html[data-inspector],
-html[data-inspector] * {
-  cursor:
-    url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='24'%20height='24'%3E%3Cpath%20d='M12%202v6M12%2016v6M2%2012h6M16%2012h6'%20fill='none'%20stroke='%23fff'%20stroke-width='3.5'%20stroke-linecap='round'/%3E%3Ccircle%20cx='12'%20cy='12'%20r='3'%20fill='%23fff'/%3E%3Cpath%20d='M12%202v6M12%2016v6M2%2012h6M16%2012h6'%20fill='none'%20stroke='%23000'%20stroke-width='1.4'%20stroke-linecap='round'/%3E%3Ccircle%20cx='12'%20cy='12'%20r='1.6'%20fill='%23000'/%3E%3C/svg%3E")
-      12 12,
-    crosshair !important;
-}
-
-/* Scrollbars derive from tokens rather than hardcoded values */
-::-webkit-scrollbar {
-  width: 6px;
-}
-::-webkit-scrollbar-track {
-  background: var(--c-ground);
-}
-::-webkit-scrollbar-thumb {
-  background: var(--c-line-2);
-  border-radius: 3px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: var(--c-faint);
+/* A link underlined with a faint rule that turns to pen on hover. */
+@utility ink-link {
+  color: var(--c-ink);
+  background: linear-gradient(var(--c-rule), var(--c-rule)) 0 100% / 100% 1.5px no-repeat;
+  transition: background-image 0.15s;
+  &:hover {
+    background-image: linear-gradient(var(--c-pen), var(--c-pen));
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

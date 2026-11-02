@@ -12,7 +12,19 @@ export interface BlogPost {
   summary: string
   readingTime: string
   content: ContentBlock[]
+  /** Sidenotes, numbered in the order they're first referenced. */
+  notes: Sidenote[]
 }
+
+export interface Sidenote {
+  id: string
+  number: number
+  text: string
+}
+
+/** `[^id]` in the text points at a `[^id]: note` line elsewhere in the post. */
+export const NOTE_REF = /\[\^([\w-]+)\]/g
+const NOTE_DEF = /^\[\^([\w-]+)\]:\s+(.+)$/
 
 interface BlogFrontmatter {
   title: string
@@ -102,9 +114,18 @@ function requireStringArray(values: Record<string, string | string[]>, key: stri
   return value
 }
 
-function parseMarkdownBody(body: string): ContentBlock[] {
+function parseMarkdownBody(source: string): { blocks: ContentBlock[]; notes: Sidenote[] } {
   const blocks: ContentBlock[] = []
-  const lines = body.split("\n")
+  const definitions = new Map<string, string>()
+  let inFence = false
+  const lines = source.split("\n").filter((line) => {
+    if (line.trim().startsWith("```")) inFence = !inFence
+    const def = inFence ? null : line.trim().match(NOTE_DEF)
+    if (!def) return true
+    if (definitions.has(def[1])) throw new Error(`Sidenote [^${def[1]}] is defined twice`)
+    definitions.set(def[1], def[2].trim())
+    return false
+  })
   let index = 0
 
   while (index < lines.length) {
@@ -173,7 +194,36 @@ function parseMarkdownBody(body: string): ContentBlock[] {
     blocks.push({ type: "paragraph", text: paragraphLines.join(" ") })
   }
 
-  return blocks
+  return { blocks, notes: numberNotes(blocks, definitions) }
+}
+
+/** Every reference needs a definition and every definition a reference, or the post fails to build. */
+function numberNotes(blocks: ContentBlock[], definitions: Map<string, string>): Sidenote[] {
+  const notes: Sidenote[] = []
+  for (const block of blocks) {
+    if (block.type === "code") continue
+    const texts = block.type === "list" ? block.items : [block.text]
+    for (const text of texts) {
+      for (const [, id] of text.matchAll(NOTE_REF)) {
+        if (notes.some((note) => note.id === id)) continue
+        const note = definitions.get(id)
+        if (!note) throw new Error(`Sidenote [^${id}] has no definition`)
+        notes.push({ id, number: notes.length + 1, text: note })
+      }
+    }
+  }
+  for (const id of definitions.keys()) {
+    if (!notes.some((note) => note.id === id)) throw new Error(`Sidenote [^${id}] is never used`)
+  }
+  return notes
+}
+
+/** The sidenotes a block references, in order. */
+export function notesIn(block: ContentBlock, notes: readonly Sidenote[]): Sidenote[] {
+  if (block.type === "code") return []
+  const texts = block.type === "list" ? block.items : [block.text]
+  const ids = new Set(texts.flatMap((text) => [...text.matchAll(NOTE_REF)].map((m) => m[1])))
+  return notes.filter((note) => ids.has(note.id))
 }
 
 export const blogPosts: BlogPost[] = Object.entries(rawPosts)
@@ -183,7 +233,7 @@ export const blogPosts: BlogPost[] = Object.entries(rawPosts)
       return {
         slug: getSlug(path),
         ...metadata,
-        content: parseMarkdownBody(body),
+        ...(({ blocks, notes }) => ({ content: blocks, notes }))(parseMarkdownBody(body)),
       }
     } catch (error) {
       if (error instanceof Error) {

@@ -35,41 +35,21 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
   render() {
     if (this.state.hasError) {
       return (
-        <div className="min-h-[calc(100vh-4rem)] flex flex-col items-start justify-center max-w-3xl mx-auto px-6">
-          <div className="font-mono text-sm leading-relaxed">
-            <span className="text-tokyo-green">$ </span>
-            <span className="text-foreground">./render --page</span>
-          </div>
-
-          <div className="font-mono text-sm leading-relaxed mt-1">
-            <span className="text-tokyo-red">Segmentation fault (core dumped)</span>
-          </div>
-
+        <div className="py-16">
+          <p className="text-[21px] italic">Something on this page broke.</p>
           {this.state.error?.message && (
-            <div className="font-mono text-sm leading-relaxed mt-3">
-              <span className="text-muted-foreground">
-                {">"} {this.state.error.message}
-              </span>
-            </div>
+            <p className="mt-2 font-mono text-[13px] text-faint">{this.state.error.message}</p>
           )}
-
-          <div className="font-mono text-sm leading-relaxed mt-6">
-            <span className="text-tokyo-green">$ </span>
-            <span className="text-muted-foreground">
-              something broke. you can retry or bail out.
-            </span>
-          </div>
-
-          <div className="mt-8 flex items-center gap-6">
+          <div className="mt-6 flex gap-6">
             <button
               type="button"
               onClick={() => this.setState({ hasError: false, error: null })}
-              className="font-mono text-sm text-primary hover:underline cursor-pointer"
+              className="ink-link cursor-pointer"
             >
-              ↻ retry
+              Try again
             </button>
-            <Link to="/" className="font-mono text-sm text-primary hover:underline">
-              → go home
+            <Link to="/" className="ink-link">
+              Go home
             </Link>
           </div>
         </div>

@@ -1,0 +1,589 @@
+{
+  "profile": {
+    "login": "ppramanik62",
+    "since": "2023-03-06",
+    "publicRepos": 67
+  },
+  "contributions": {
+    "total": 1981,
+    "start": "2025-11-02",
+    "counts": [
+      4, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0, 0, 0,
+      0, 1, 4, 0, 8, 8, 1, 1, 0, 2, 6, 2, 2, 2, 6, 7, 7, 2, 0, 2, 6, 0, 2, 0, 0, 0, 1, 3, 1, 1, 1,
+      5, 12, 3, 6, 9, 3, 5, 1, 0, 2, 0, 1, 1, 0, 2, 14, 3, 1, 4, 17, 4, 6, 10, 5, 1, 2, 18, 5, 4, 0,
+      3, 3, 2, 6, 4, 1, 0, 4, 5, 2, 8, 13, 2, 8, 4, 11, 13, 0, 1, 1, 0, 4, 0, 0, 4, 6, 14, 24, 19,
+      2, 3, 10, 3, 4, 1, 1, 0, 5, 11, 24, 25, 5, 17, 16, 2, 8, 2, 0, 0, 3, 1, 3, 4, 14, 23, 12, 1,
+      2, 2, 0, 2, 1, 0, 24, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 24, 9, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 28, 3, 0, 0, 0, 1, 4, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0, 2, 0, 0, 0, 4, 5, 0, 4, 5, 10, 7, 11, 0, 0, 16, 10, 21, 16, 17, 36, 26, 28, 9,
+      4, 14, 16, 2, 18, 0, 6, 8, 9, 14, 2, 16, 28, 25, 23, 34, 14, 3, 13, 26, 10, 2, 19, 7, 20, 6,
+      9, 29, 15, 4, 17, 0, 11, 8, 6, 12, 12, 12, 7, 0, 4, 5, 51, 63, 7, 0, 0, 0, 0, 13, 27, 9, 33,
+      17, 1, 45, 13, 3, 19, 7, 5, 16, 44, 1, 0, 0, 0, 9, 5, 1, 1, 1, 0, 1, 1, 27, 0, 5, 3, 0, 0, 0,
+      1, 0, 0, 1, 0, 9, 15, 48, 7, 2, 11, 11, 1, 2, 9
+    ]
+  },
+  "repos": [
+    {
+      "name": "onyxdb",
+      "description": "A SQL database written from scratch in Rust.",
+      "language": "Rust",
+      "stars": 2,
+      "homepage": "",
+      "created": "2026-10-10",
+      "pushed": "2026-11-02"
+    },
+    {
+      "name": "database-papers",
+      "description": "My notes from learning how databases work: the papers, specs and design docs I read, and what I learned from each. The database I build alongside is onyxdb.",
+      "language": "",
+      "stars": 1,
+      "homepage": "",
+      "created": "2026-10-24",
+      "pushed": "2026-10-29"
+    },
+    {
+      "name": "purbayan.dev",
+      "description": "Developer portfolio — tokyo night, monospace everything, and maybe a few secrets.",
+      "language": "TypeScript",
+      "stars": 0,
+      "homepage": "https://purbayan.me",
+      "created": "2026-02-16",
+      "pushed": "2026-10-11"
+    },
+    {
+      "name": "yc-jev-bench",
+      "description": "Can Jev replace an LLM reranker? A benchmark of TypeSafe's Jev vs Claude Haiku and BGE on natural-language search over all 6,245 YC companies, with a live search demo.",
+      "language": "TypeScript",
+      "stars": 1,
+      "homepage": "https://ycsearch.purbayan.me",
+      "created": "2026-09-22",
+      "pushed": "2026-09-22"
+    },
+    {
+      "name": "trovecn",
+      "description": "A registry of interface patterns observed on real sites, rebuilt from scratch and distributed via shadcn CLI.",
+      "language": "TypeScript",
+      "stars": 54,
+      "homepage": "https://trovecn.dev",
+      "created": "2026-08-04",
+      "pushed": "2026-08-28"
+    },
+    {
+      "name": "mdt",
+      "description": "A fast, terminal-based markdown viewer and editor built with Rust",
+      "language": "Rust",
+      "stars": 11,
+      "homepage": "https://mdt.purbayan.me",
+      "created": "2026-03-14",
+      "pushed": "2026-08-11"
+    },
+    {
+      "name": "musializer",
+      "description": "A real-time audio frequency spectrum visualizer using FFT (Fast Fourier Transform).",
+      "language": "C",
+      "stars": 0,
+      "homepage": "",
+      "created": "2026-01-18",
+      "pushed": "2026-04-06"
+    },
+    {
+      "name": "4at",
+      "description": "Simple multi-user chat built in both Go and Rust ",
+      "language": "Rust",
+      "stars": 0,
+      "homepage": "",
+      "created": "2026-01-24",
+      "pushed": "2026-01-25"
+    },
+    {
+      "name": "seroost",
+      "description": "Local search engine",
+      "language": "Rust",
+      "stars": 0,
+      "homepage": "",
+      "created": "2026-01-04",
+      "pushed": "2026-01-22"
+    }
+  ],
+  "oss": [
+    {
+      "repo": "tursodatabase/turso",
+      "prs": [
+        {
+          "number": 11099,
+          "title": "core/storage: check overflow page numbers before reading them",
+          "state": "open",
+          "opened": "2026-10-30",
+          "merged": null
+        }
+      ]
+    },
+    {
+      "repo": "liliu-z/stashbase",
+      "prs": [
+        {
+          "number": 224,
+          "title": "feat(profiling): add a rerunnable profiling harness with an editing scenario",
+          "state": "merged",
+          "opened": "2026-10-12",
+          "merged": "2026-10-13"
+        },
+        {
+          "number": 223,
+          "title": "refactor: remove unused code and consolidate duplicated logic",
+          "state": "merged",
+          "opened": "2026-10-12",
+          "merged": "2026-10-12"
+        },
+        {
+          "number": 222,
+          "title": "fix(editor): fast typing and format-preserving saves in long Markdown documents",
+          "state": "merged",
+          "opened": "2026-10-12",
+          "merged": "2026-10-12"
+        },
+        {
+          "number": 218,
+          "title": "feat(agent): review what an Agent turn changed, on request",
+          "state": "merged",
+          "opened": "2026-10-04",
+          "merged": "2026-10-04"
+        },
+        {
+          "number": 215,
+          "title": "feat(appearance): themes, system fonts, reading layout, and editor preferences",
+          "state": "merged",
+          "opened": "2026-09-29",
+          "merged": "2026-10-05"
+        },
+        {
+          "number": 214,
+          "title": "feat(agent): document passages, citations, and an open-document suggestion",
+          "state": "merged",
+          "opened": "2026-09-25",
+          "merged": "2026-09-25"
+        },
+        {
+          "number": 212,
+          "title": "feat(documents): review Agent prose revisions inline",
+          "state": "merged",
+          "opened": "2026-09-18",
+          "merged": "2026-09-18"
+        },
+        {
+          "number": 211,
+          "title": "feat(renderer): replace the renderer with a layered, machine-enforced frontend",
+          "state": "merged",
+          "opened": "2026-09-10",
+          "merged": "2026-09-10"
+        },
+        {
+          "number": 206,
+          "title": "fix(workspace): truncate the titlebar folder name at the sidebar edge",
+          "state": "merged",
+          "opened": "2026-08-28",
+          "merged": "2026-08-28"
+        },
+        {
+          "number": 201,
+          "title": "fix(a11y): HTML-semantics pass across the renderer",
+          "state": "merged",
+          "opened": "2026-08-26",
+          "merged": "2026-08-26"
+        },
+        {
+          "number": 190,
+          "title": "refactor(web): stand the renderer on one set of scales and one primitive layer",
+          "state": "merged",
+          "opened": "2026-08-24",
+          "merged": "2026-08-25"
+        },
+        {
+          "number": 186,
+          "title": "feat(documents): insert and follow links to other library files",
+          "state": "merged",
+          "opened": "2026-08-20",
+          "merged": "2026-08-20"
+        },
+        {
+          "number": 183,
+          "title": "refactor(web): give the renderer a layer model, and make the machine enforce it",
+          "state": "merged",
+          "opened": "2026-08-18",
+          "merged": "2026-08-18"
+        },
+        {
+          "number": 174,
+          "title": "test(e2e): refresh Linux visual baselines",
+          "state": "merged",
+          "opened": "2026-08-15",
+          "merged": "2026-08-15"
+        },
+        {
+          "number": 169,
+          "title": "test(e2e): refresh Linux visual baselines",
+          "state": "merged",
+          "opened": "2026-08-14",
+          "merged": "2026-08-14"
+        },
+        {
+          "number": 163,
+          "title": "fix(agent): preserve immediate stream deltas",
+          "state": "merged",
+          "opened": "2026-08-13",
+          "merged": "2026-08-13"
+        },
+        {
+          "number": 162,
+          "title": "fix(ci): stabilize cross-platform source gates",
+          "state": "merged",
+          "opened": "2026-08-13",
+          "merged": "2026-08-13"
+        },
+        {
+          "number": 155,
+          "title": "feat(e2e): add Playwright E2E test suite for UI regression coverage",
+          "state": "merged",
+          "opened": "2026-08-12",
+          "merged": "2026-08-12"
+        },
+        {
+          "number": 150,
+          "title": "refactor(ui): redesign workspace and scoped agent chat",
+          "state": "merged",
+          "opened": "2026-08-10",
+          "merged": "2026-08-10"
+        },
+        {
+          "number": 126,
+          "title": "feat(agent): add available skill discovery and invocation",
+          "state": "merged",
+          "opened": "2026-08-06",
+          "merged": "2026-08-06"
+        },
+        {
+          "number": 116,
+          "title": "fix(agent): map Codex Auto reviewer",
+          "state": "merged",
+          "opened": "2026-08-05",
+          "merged": "2026-08-05"
+        },
+        {
+          "number": 100,
+          "title": "refactor(renderer): extract active-folder workspace",
+          "state": "merged",
+          "opened": "2026-08-02",
+          "merged": "2026-08-02"
+        },
+        {
+          "number": 94,
+          "title": "feat(library): add Editor History",
+          "state": "merged",
+          "opened": "2026-07-31",
+          "merged": "2026-07-31"
+        },
+        {
+          "number": 93,
+          "title": "feat(library): add Command Palette",
+          "state": "merged",
+          "opened": "2026-07-31",
+          "merged": "2026-07-31"
+        },
+        {
+          "number": 92,
+          "title": "feat(agent): paste clipboard images as chat attachments",
+          "state": "merged",
+          "opened": "2026-07-31",
+          "merged": "2026-07-31"
+        },
+        {
+          "number": 91,
+          "title": "fix(agent): show install guidance for unavailable built-in agents",
+          "state": "merged",
+          "opened": "2026-07-30",
+          "merged": "2026-07-30"
+        },
+        {
+          "number": 85,
+          "title": "fix(markdown): improve dark menu contrast",
+          "state": "merged",
+          "opened": "2026-07-29",
+          "merged": "2026-07-29"
+        },
+        {
+          "number": 83,
+          "title": "feat(appearance): add theme and reading presets",
+          "state": "merged",
+          "opened": "2026-07-28",
+          "merged": "2026-07-28"
+        },
+        {
+          "number": 81,
+          "title": "feat(library): add Quick Open",
+          "state": "merged",
+          "opened": "2026-07-28",
+          "merged": "2026-07-28"
+        },
+        {
+          "number": 74,
+          "title": "refactor(retrieval): centralize source evidence",
+          "state": "merged",
+          "opened": "2026-07-24",
+          "merged": "2026-07-24"
+        },
+        {
+          "number": 73,
+          "title": "refactor(mcp): share library operations across transports",
+          "state": "merged",
+          "opened": "2026-07-24",
+          "merged": "2026-07-24"
+        },
+        {
+          "number": 72,
+          "title": "feat(agent-panel): improve accessible chat interactions",
+          "state": "merged",
+          "opened": "2026-07-24",
+          "merged": "2026-07-24"
+        },
+        {
+          "number": 67,
+          "title": "feat(markdown): migrate editor to Milkdown Crepe",
+          "state": "merged",
+          "opened": "2026-07-23",
+          "merged": "2026-07-24"
+        },
+        {
+          "number": 65,
+          "title": "feat(markdown-editor): present and author lists and blockquotes",
+          "state": "merged",
+          "opened": "2026-07-23",
+          "merged": "2026-07-23"
+        },
+        {
+          "number": 64,
+          "title": "feat(markdown-editor): improve live code fences",
+          "state": "merged",
+          "opened": "2026-07-23",
+          "merged": "2026-07-23"
+        },
+        {
+          "number": 63,
+          "title": "feat(markdown-editor): preserve source semantics through clipboard and Find",
+          "state": "merged",
+          "opened": "2026-07-23",
+          "merged": "2026-07-23"
+        },
+        {
+          "number": 59,
+          "title": "feat(markdown-editor): make Live links editable and navigable",
+          "state": "merged",
+          "opened": "2026-07-22",
+          "merged": "2026-07-22"
+        },
+        {
+          "number": 58,
+          "title": "docs: restructure design documentation",
+          "state": "merged",
+          "opened": "2026-07-21",
+          "merged": "2026-07-22"
+        },
+        {
+          "number": 57,
+          "title": "feat(markdown-editor): reveal Markdown constructs in Live Editing",
+          "state": "merged",
+          "opened": "2026-07-21",
+          "merged": "2026-07-21"
+        },
+        {
+          "number": 55,
+          "title": "feat(markdown-preview): live preview and editing of markdown files",
+          "state": "merged",
+          "opened": "2026-07-20",
+          "merged": "2026-07-21"
+        },
+        {
+          "number": 54,
+          "title": "feat(markdown): add persistent live editing",
+          "state": "merged",
+          "opened": "2026-07-20",
+          "merged": "2026-07-20"
+        },
+        {
+          "number": 42,
+          "title": "test(agent): prove adapter parity and native compatibility",
+          "state": "merged",
+          "opened": "2026-07-20",
+          "merged": "2026-07-20"
+        },
+        {
+          "number": 39,
+          "title": "fix(agent): preserve sensitive Codex approvals",
+          "state": "merged",
+          "opened": "2026-07-17",
+          "merged": "2026-07-17"
+        },
+        {
+          "number": 38,
+          "title": "fix(agent): complete shared Claude and Codex adapters",
+          "state": "merged",
+          "opened": "2026-07-17",
+          "merged": "2026-07-17"
+        },
+        {
+          "number": 37,
+          "title": "refactor(agent): expand the Shared Agent Contract",
+          "state": "merged",
+          "opened": "2026-07-17",
+          "merged": "2026-07-17"
+        },
+        {
+          "number": 30,
+          "title": "feat(markdown-preview): hide frontmatter and render alerts",
+          "state": "merged",
+          "opened": "2026-07-16",
+          "merged": "2026-07-16"
+        },
+        {
+          "number": 29,
+          "title": "feat(markdown-preview): adopt package-native footnotes and heading anchors",
+          "state": "merged",
+          "opened": "2026-07-16",
+          "merged": "2026-07-16"
+        },
+        {
+          "number": 24,
+          "title": "feat(markdown-preview): add accessible Markdown footnotes",
+          "state": "merged",
+          "opened": "2026-07-15",
+          "merged": "2026-07-15"
+        },
+        {
+          "number": 23,
+          "title": "feat(markdown-preview): sanitize raw Markdown HTML",
+          "state": "merged",
+          "opened": "2026-07-15",
+          "merged": "2026-07-15"
+        },
+        {
+          "number": 22,
+          "title": "feat(markdown-preview): standardize document rendering",
+          "state": "merged",
+          "opened": "2026-07-15",
+          "merged": "2026-07-15"
+        },
+        {
+          "number": 15,
+          "title": "feat(agent): improve Codex tool activity history",
+          "state": "merged",
+          "opened": "2026-07-14",
+          "merged": "2026-07-14"
+        },
+        {
+          "number": 14,
+          "title": "feat(agent-panel): polish codex sessions and file mentions",
+          "state": "merged",
+          "opened": "2026-07-14",
+          "merged": "2026-07-14"
+        },
+        {
+          "number": 13,
+          "title": "feat(agent-chat): deliver workbench transcript",
+          "state": "merged",
+          "opened": "2026-07-13",
+          "merged": "2026-07-14"
+        },
+        {
+          "number": 11,
+          "title": "fix(agent-pane): smooth chat sidebar resizing",
+          "state": "merged",
+          "opened": "2026-07-11",
+          "merged": "2026-07-13"
+        },
+        {
+          "number": 10,
+          "title": "feat(agent-composer): add keyboard navigation to file mentions",
+          "state": "merged",
+          "opened": "2026-07-11",
+          "merged": "2026-07-13"
+        },
+        {
+          "number": 9,
+          "title": "fix(agent-composer): toggle and select agent chats",
+          "state": "merged",
+          "opened": "2026-07-11",
+          "merged": "2026-07-13"
+        }
+      ]
+    },
+    {
+      "repo": "Bot-Holder/stashbase-web",
+      "prs": [
+        {
+          "number": 3,
+          "title": "Add X thread, X reply and PR launch-post tools; regroup the tools hub",
+          "state": "merged",
+          "opened": "2026-09-24",
+          "merged": "2026-09-25"
+        }
+      ]
+    },
+    {
+      "repo": "mastra-ai/mastra",
+      "prs": [
+        {
+          "number": 13400,
+          "title": "fix(core): sanitize LLM tokens from tool-call input before JSON.parse",
+          "state": "merged",
+          "opened": "2026-02-23",
+          "merged": "2026-03-06"
+        }
+      ]
+    },
+    {
+      "repo": "langfuse/langfuse",
+      "prs": [
+        {
+          "number": 12322,
+          "title": "feat(annotation-queues): show comments section for sessions in annotation queue",
+          "state": "open",
+          "opened": "2026-02-27",
+          "merged": null
+        },
+        {
+          "number": 12276,
+          "title": "fix(api): add explicit type to nullable fields in CreateDatasetItemRequest",
+          "state": "open",
+          "opened": "2026-02-26",
+          "merged": null
+        },
+        {
+          "number": 12275,
+          "title": "feat(datasets): add batch export button to dataset runs table",
+          "state": "open",
+          "opened": "2026-02-26",
+          "merged": null
+        }
+      ]
+    },
+    {
+      "repo": "apache/echarts",
+      "prs": [
+        {
+          "number": 21325,
+          "title": "fix(candlestick): fix candlestick render error with `series.encode`",
+          "state": "merged",
+          "opened": "2025-10-20",
+          "merged": "2025-10-30"
+        },
+        {
+          "number": 21314,
+          "title": "fix: tooltip formatter callback for connected charts. close #21307",
+          "state": "open",
+          "opened": "2025-10-14",
+          "merged": null
+        }
+      ]
+    }
+  ]
+}

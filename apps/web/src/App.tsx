@@ -3,23 +3,25 @@ import {
   RouterProvider,
   Navigate,
   isRouteErrorResponse,
+  useParams,
   useRouteError,
   Link,
 } from "react-router-dom"
 import { Layout } from "@/components/layout"
 
 import HomePage from "@/pages/home"
-import ProjectPage from "@/pages/project"
-import UsesPage from "@/pages/uses"
-import ResumePage from "@/pages/resume"
-import BlogPage from "@/pages/blog"
-import BlogPostPage from "@/pages/blog-post"
+import ProjectsPage from "@/pages/projects"
+import ExperiencePage from "@/pages/experience"
+import WritingPage from "@/pages/writing"
+import WritingPostPage from "@/pages/writing-post"
+import ReadingPage from "@/pages/reading"
+import OpenSourcePage from "@/pages/open-source"
 import NotFoundPage from "@/pages/not-found"
 
 function RouteError() {
   const error = useRouteError()
   const message = isRouteErrorResponse(error)
-    ? `${error.status} — ${error.statusText}`
+    ? `${error.status} ${error.statusText}`
     : error instanceof Error
       ? error.message
       : "Unknown error"
@@ -27,13 +29,19 @@ function RouteError() {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center px-6 text-center">
       <p className="text-dim">
-        <span className="text-[var(--c-destructive)]">Error:</span> {message}
+        <span className="text-pen">Error:</span> {message}
       </p>
-      <Link to="/" className="mt-4 text-brand hover:underline">
+      <Link to="/" className="ink-link mt-4">
         Go home
       </Link>
     </div>
   )
+}
+
+/** Old /blog/:slug links now live under /writing. */
+function OldPost() {
+  const { slug } = useParams()
+  return <Navigate to={`/writing/${slug}`} replace />
 }
 
 const router = createBrowserRouter([
@@ -42,16 +50,18 @@ const router = createBrowserRouter([
     errorElement: <RouteError />,
     children: [
       { path: "/", element: <HomePage /> },
-      { path: "/projects/:slug", element: <ProjectPage /> },
-      { path: "/blog", element: <BlogPage /> },
-      { path: "/blog/:slug", element: <BlogPostPage /> },
-      { path: "/uses", element: <UsesPage /> },
-      { path: "/resume", element: <ResumePage /> },
+      { path: "/projects", element: <ProjectsPage /> },
+      { path: "/experience", element: <ExperiencePage /> },
+      { path: "/writing", element: <WritingPage /> },
+      { path: "/writing/:slug", element: <WritingPostPage /> },
+      { path: "/reading", element: <ReadingPage /> },
+      { path: "/open-source", element: <OpenSourcePage /> },
 
-      // Folded into the home page — keep old links working.
+      // Keep old links working.
       { path: "/about", element: <Navigate to="/" replace /> },
-      { path: "/experience", element: <Navigate to="/#work" replace /> },
-      { path: "/projects", element: <Navigate to="/#projects" replace /> },
+      { path: "/blog", element: <Navigate to="/writing" replace /> },
+      { path: "/blog/:slug", element: <OldPost /> },
+      { path: "/projects/:slug", element: <Navigate to="/projects" replace /> },
 
       { path: "*", element: <NotFoundPage /> },
     ],
