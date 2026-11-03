@@ -1,6 +1,7 @@
 /** Reads blog post frontmatter for the build scripts (thumbnails, prerendered previews). */
 import { readdirSync, readFileSync } from "node:fs"
 import { join } from "node:path"
+import { assertUniqueSlugs, parsePostFile } from "../src/data/post-file"
 
 export interface PostMeta {
   slug: string
@@ -24,19 +25,22 @@ function frontmatter(source: string): Record<string, string> {
 }
 
 export function readPosts(): PostMeta[] {
-  return readdirSync(postsDir)
+  const posts = readdirSync(postsDir)
     .filter((file) => file.endsWith(".md"))
     .map((file) => {
+      const { date, slug } = parsePostFile(file)
       const fm = frontmatter(readFileSync(join(postsDir, file), "utf8"))
-      for (const key of ["title", "date", "summary", "readingTime"]) {
+      for (const key of ["title", "summary", "readingTime"]) {
         if (!fm[key]) throw new Error(`${file}: frontmatter needs "${key}"`)
       }
       return {
-        slug: file.replace(/\.md$/, ""),
+        slug,
         title: fm.title,
-        date: fm.date,
+        date,
         summary: fm.summary,
         readingTime: fm.readingTime,
       }
     })
+  assertUniqueSlugs(posts)
+  return posts
 }

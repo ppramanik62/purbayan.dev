@@ -1,6 +1,5 @@
 ---
 title: "Layers on an immediate-mode canvas"
-date: "2025-02-16"
 tags: ["canvas-api", "react", "typescript", "architecture"]
 summary: "The HTML5 Canvas API is immediate-mode. It forgets everything it draws. So how do you build layers, undo/redo, and compositing on top of it?"
 readingTime: "4 min read"

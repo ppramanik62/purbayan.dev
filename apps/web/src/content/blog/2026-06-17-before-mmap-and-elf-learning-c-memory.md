@@ -1,6 +1,5 @@
 ---
 title: "Before mmap and ELF: learning C memory by building tiny utilities"
-date: "2026-06-17"
 tags: ["c", "memory", "systems", "learning"]
 summary: "Before jumping into mmap, ELF files, and OS internals, I wanted to know whether I understood how my own C data structures own and grow memory."
 readingTime: "6 min read"

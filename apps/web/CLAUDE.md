@@ -37,7 +37,7 @@ bun run og:posts      # draw thumbnails for posts that lack one
 
 **Automation:** `.github/workflows/sync-github.yml` runs the sync and the thumbnails daily and commits only when something changed.
 
-**Blog posts:** Markdown in `src/content/blog/`, loaded by `src/data/blog.ts`, served at `/writing/:slug`. Required frontmatter: `title`, `date`, `tags`, `summary`, `readingTime`.
+**Blog posts:** Markdown in `src/content/blog/`, named `<yyyy-mm-dd>-<slug>.md`. The filename is the only place the date lives; the slug (date stripped) is the URL, `/writing/:slug`, and the thumbnail name, `public/og/<slug>.png`. `src/data/post-file.ts` parses the name for both `src/data/blog.ts` and `scripts/posts.ts`, and a bad name, an impossible date or a repeated slug fails the build. Required frontmatter: `title`, `tags`, `summary`, `readingTime`.
 
 **Sidenotes:** write `[^id]` in a paragraph or list item and `[^id]: the note` on its own line anywhere in the post. Notes are numbered by first use and sit in the margin beside their paragraph (under it on phones). A reference without a definition, or a definition never used, fails the build.
 

@@ -30,12 +30,11 @@ Everything the site says lives in `src/data/`.
 
 Projects, open-source PRs, the contribution heatmap and the avatar come from GitHub. A daily workflow refreshes them; to do it by hand, run `bun run sync:github` (needs `gh` logged in).
 
-Posts live in `src/content/blog/*.md`. The filename becomes the slug:
+Posts live in `src/content/blog/`, named `<yyyy-mm-dd>-<slug>.md`, like `2026-06-21-post-title.md`. The date in the name is the publish date, and the rest is the URL (`/writing/post-title`):
 
 ```md
 ---
 title: "Post title"
-date: "2026-06-21"
 tags: ["tag"]
 summary: "Short description."
 readingTime: "4 min read"

@@ -1,3 +1,5 @@
+import { assertUniqueSlugs, parsePostFile } from "./post-file"
+
 export type ContentBlock =
   | { type: "paragraph"; text: string }
   | { type: "heading"; text: string }
@@ -28,7 +30,6 @@ const NOTE_DEF = /^\[\^([\w-]+)\]:\s+(.+)$/
 
 interface BlogFrontmatter {
   title: string
-  date: string
   tags: string[]
   summary: string
   readingTime: string
@@ -39,14 +40,6 @@ const rawPosts = import.meta.glob<string>("../content/blog/*.md", {
   import: "default",
   eager: true,
 })
-
-function getSlug(path: string): string {
-  const filename = path.split("/").pop()
-  if (!filename) {
-    throw new Error(`Invalid blog path: ${path}`)
-  }
-  return filename.replace(/\.md$/, "")
-}
 
 function parseScalar(value: string): string {
   const trimmed = value.trim()
@@ -89,7 +82,6 @@ function parseFrontmatter(source: string): { metadata: BlogFrontmatter; body: st
 
   const metadata = {
     title: requireString(values, "title"),
-    date: requireString(values, "date"),
     tags: requireStringArray(values, "tags"),
     summary: requireString(values, "summary"),
     readingTime: requireString(values, "readingTime"),
@@ -229,9 +221,11 @@ export function notesIn(block: ContentBlock, notes: readonly Sidenote[]): Sideno
 export const blogPosts: BlogPost[] = Object.entries(rawPosts)
   .map(([path, rawPost]) => {
     try {
+      const { date, slug } = parsePostFile(path.split("/").pop() ?? path)
       const { metadata, body } = parseFrontmatter(rawPost)
       return {
-        slug: getSlug(path),
+        slug,
+        date,
         ...metadata,
         ...(({ blocks, notes }) => ({ content: blocks, notes }))(parseMarkdownBody(body)),
       }
@@ -243,3 +237,5 @@ export const blogPosts: BlogPost[] = Object.entries(rawPosts)
     }
   })
   .sort((a, b) => b.date.localeCompare(a.date))
+
+assertUniqueSlugs(blogPosts)
