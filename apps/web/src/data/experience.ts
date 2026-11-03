@@ -1,3 +1,6 @@
+import raw from "../content/experience.json"
+import { parseArray, parseObject, parseString, parseStringArray, parseUrl } from "./parse"
+
 export interface Experience {
   company: string
   url: string
@@ -8,59 +11,21 @@ export interface Experience {
   work: readonly string[]
 }
 
-export const experiences: readonly Experience[] = [
-  {
-    company: "StashBase",
-    url: "https://stashbase.ai",
-    role: "Open-source contributor",
-    period: "Jul 2026 – now",
-    summary: "A local knowledge base where you write alongside AI agents like Claude and Codex.",
-    work: [
-      "Built the Markdown editor, where you edit and preview in the same place.",
-      "Built a shared contract for agent backends, and the Claude and Codex adapters on top of it.",
-      "Built review for agent edits, so each change shows up inside the document and you keep it or undo it.",
-      "Restructured the frontend into layers the build checks, and added end-to-end tests for UI regressions.",
-      "Added a profiling harness for the editor, and fixed slow typing in long documents.",
-    ],
-  },
-  {
-    company: "SamurAI Studios",
-    url: "https://samur-ai.in",
-    role: "Software engineer",
-    period: "Apr – Jul 2026",
-    summary: "A creative workspace for producing marketing ads with agents.",
-    work: [
-      "Built a pipeline that reads a creative brief from a slide deck and turns it into a structured story the rest of the product works from.",
-      "Built storyboard workspaces end to end: the APIs, Postgres storage, version history and the UI.",
-      "Connected image and video generation across several model providers, carrying the visual style from one shot to the next.",
-      "Moved the product onto a shared component system, and made media load faster.",
-    ],
-  },
-  {
-    company: "fiddle-factory",
-    url: "https://fiddle.is",
-    role: "Software engineer, contract",
-    period: "Dec 2025 – Apr 2026",
-    summary: "A workspace for teams to design in their codebase.",
-    work: [
-      "Worked on the canvas: theme switching, auto-pan, a component grid and an element inspector.",
-      "Fixed a race that broke the canvas on first load for new users.",
-      "Added chat features like a slash-command menu, and made message updates non-blocking.",
-      "Set up Storybook across the component libraries, with a screenshot pipeline on top.",
-      "Added access control and a PKCE sign-in flow for the dashboard.",
-    ],
-  },
-  {
-    company: "fiddle-factory",
-    url: "https://fiddle.is",
-    role: "Software engineer, intern",
-    period: "May – Aug 2025",
-    summary: "The same product, as an intern.",
-    work: [
-      "Moved the canvas from react-flow to tldraw.",
-      "Moved the cloud sandbox from StackBlitz WebContainers to e2b.",
-      "Built “make real”, which turns a drawing on the canvas into a generated component.",
-      "Worked on the Figma-to-code plugin and the onboarding flow.",
-    ],
-  },
-]
+const FILE = "content/experience.json"
+
+function parseExperience(value: unknown, where: string): Experience {
+  const job = parseObject(value, where)
+  return {
+    company: parseString(job.company, `${where}.company`),
+    url: parseUrl(job.url, `${where}.url`),
+    role: parseString(job.role, `${where}.role`),
+    period: parseString(job.period, `${where}.period`),
+    summary: parseString(job.summary, `${where}.summary`),
+    work: parseStringArray(job.work, `${where}.work`),
+  }
+}
+
+/** Jobs on /experience, newest first. Edit `src/content/experience.json`. */
+export const experiences: readonly Experience[] = parseArray(raw, FILE).map((job, i) =>
+  parseExperience(job, `${FILE} [${i}]`),
+)
