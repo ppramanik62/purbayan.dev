@@ -42,7 +42,10 @@ export function Layout() {
     <div className="mx-auto flex min-h-dvh max-w-[860px] flex-col px-5 pt-14 pb-10 max-[680px]:pt-8">
       <header className="grid grid-cols-[var(--margin)_minmax(0,1fr)] items-end gap-x-[var(--gutter)] border-b border-rule pb-[22px] max-[680px]:grid-cols-1">
         <div className="pb-1.5 text-right max-[680px]:pb-1 max-[680px]:text-left">
-          <span className="block text-[17px] leading-tight text-dim italic">{todayLong()}</span>
+          {/* Long dates are wider than the margin; keep them on one line, overflowing left. */}
+          <span className="flex justify-end text-[17px] leading-tight whitespace-nowrap text-dim italic max-[680px]:justify-start">
+            {todayLong()}
+          </span>
           <span className="mt-0.5 block font-mono text-[11.5px] text-faint">
             Kolkata · <Clock />
           </span>
