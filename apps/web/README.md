@@ -41,6 +41,8 @@ readingTime: "4 min read"
 ---
 ```
 
+Images go in `public/blog/<slug>/` and in the post as a line on its own: `![what it shows](/blog/<slug>/drawing.svg "Optional caption.")`. Export Excalidraw drawings as SVG with a light or transparent background. Missing alt text or a missing file fails the build.
+
 Run `bun run og:posts` to draw its thumbnail. Sidenotes are `[^id]` in the text and `[^id]: the note` on its own line.
 
 ## deployment

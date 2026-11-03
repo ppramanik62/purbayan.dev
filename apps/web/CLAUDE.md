@@ -39,6 +39,8 @@ bun run og:posts      # draw thumbnails for posts that lack one
 
 **Blog posts:** Markdown in `src/content/blog/`, named `<yyyy-mm-dd>-<slug>.md`. The filename is the only place the date lives; the slug (date stripped) is the URL, `/writing/:slug`, and the thumbnail name, `public/og/<slug>.png`. `src/data/post-file.ts` parses the name for both `src/data/blog.ts` and `scripts/posts.ts`, and a bad name, an impossible date or a repeated slug fails the build. Required frontmatter: `title`, `tags`, `summary`, `readingTime`.
 
+**Images:** a line on its own, `![alt](/blog/<slug>/name.svg "optional caption")`. Files live in `public/blog/<slug>/` (svg, png, jpg, webp, avif or gif; Excalidraw drawings go in as SVG). `src/data/post-image.ts` parses the line; the site rejects missing alt text or a path outside the post's folder, and `scripts/posts.ts` fails the build when the file doesn't exist. The caption shows under the image.
+
 **Sidenotes:** write `[^id]` in a paragraph or list item and `[^id]: the note` on its own line anywhere in the post. Notes are numbered by first use and sit in the margin beside their paragraph (under it on phones). A reference without a definition, or a definition never used, fails the build.
 
 **Link previews:** `bun run build` ends with `scripts/prerender-posts.ts`, which writes `dist/writing/<slug>.html` with that post's title, summary and thumbnail in the meta tags, because link-preview crawlers don't run JavaScript. Cloudflare Pages serves those files directly and falls back to `index.html` for every other path through its single-page-app mode. Don't add a catch-all rule to `public/_redirects` or a top-level `404.html`: either one would hide the prerendered posts.

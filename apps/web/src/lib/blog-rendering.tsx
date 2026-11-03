@@ -67,6 +67,23 @@ export function renderBlock(
       )
     case "code":
       return <CodeBlock key={index} language={block.language} code={block.code} />
+    case "image":
+      return (
+        <figure key={index} className="m-0">
+          <img
+            src={block.src}
+            alt={block.alt}
+            loading="lazy"
+            decoding="async"
+            className="block h-auto max-w-full"
+          />
+          {block.caption && (
+            <figcaption className="mt-2 max-w-[64ch] font-mono text-xs leading-relaxed text-faint">
+              {block.caption}
+            </figcaption>
+          )}
+        </figure>
+      )
     case "list":
       return (
         <ul key={index} className="max-w-[64ch] list-none p-0">

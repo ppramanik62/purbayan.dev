@@ -1,10 +1,12 @@
 import { assertUniqueSlugs, parsePostFile } from "./post-file"
+import { imageDir, isImageLine, parseImageLine, type PostImage } from "./post-image"
 
 export type ContentBlock =
   | { type: "paragraph"; text: string }
   | { type: "heading"; text: string }
   | { type: "code"; language: string; code: string }
   | { type: "list"; items: string[] }
+  | ({ type: "image" } & PostImage)
 
 export interface BlogPost {
   slug: string
@@ -148,6 +150,12 @@ function parseMarkdownBody(source: string): { blocks: ContentBlock[]; notes: Sid
       continue
     }
 
+    if (isImageLine(trimmed)) {
+      blocks.push({ type: "image", ...parseImageLine(trimmed) })
+      index++
+      continue
+    }
+
     if (trimmed.startsWith("## ")) {
       blocks.push({ type: "heading", text: trimmed.slice(3).trim() })
       index++
@@ -175,7 +183,8 @@ function parseMarkdownBody(source: string): { blocks: ContentBlock[]; notes: Sid
         next === "" ||
         next.startsWith("## ") ||
         next.startsWith("```") ||
-        next.startsWith("- ")
+        next.startsWith("- ") ||
+        isImageLine(next)
       ) {
         break
       }
@@ -189,13 +198,25 @@ function parseMarkdownBody(source: string): { blocks: ContentBlock[]; notes: Sid
   return { blocks, notes: numberNotes(blocks, definitions) }
 }
 
+/** The text in a block that can hold sidenote references. Code and images hold none. */
+function textsIn(block: ContentBlock): readonly string[] {
+  switch (block.type) {
+    case "paragraph":
+    case "heading":
+      return [block.text]
+    case "list":
+      return block.items
+    case "code":
+    case "image":
+      return []
+  }
+}
+
 /** Every reference needs a definition and every definition a reference, or the post fails to build. */
 function numberNotes(blocks: ContentBlock[], definitions: Map<string, string>): Sidenote[] {
   const notes: Sidenote[] = []
   for (const block of blocks) {
-    if (block.type === "code") continue
-    const texts = block.type === "list" ? block.items : [block.text]
-    for (const text of texts) {
+    for (const text of textsIn(block)) {
       for (const [, id] of text.matchAll(NOTE_REF)) {
         if (notes.some((note) => note.id === id)) continue
         const note = definitions.get(id)
@@ -212,9 +233,9 @@ function numberNotes(blocks: ContentBlock[], definitions: Map<string, string>): 
 
 /** The sidenotes a block references, in order. */
 export function notesIn(block: ContentBlock, notes: readonly Sidenote[]): Sidenote[] {
-  if (block.type === "code") return []
-  const texts = block.type === "list" ? block.items : [block.text]
-  const ids = new Set(texts.flatMap((text) => [...text.matchAll(NOTE_REF)].map((m) => m[1])))
+  const ids = new Set(
+    textsIn(block).flatMap((text) => [...text.matchAll(NOTE_REF)].map((m) => m[1])),
+  )
   return notes.filter((note) => ids.has(note.id))
 }
 
@@ -223,11 +244,18 @@ export const blogPosts: BlogPost[] = Object.entries(rawPosts)
     try {
       const { date, slug } = parsePostFile(path.split("/").pop() ?? path)
       const { metadata, body } = parseFrontmatter(rawPost)
+      const { blocks, notes } = parseMarkdownBody(body)
+      for (const block of blocks) {
+        if (block.type === "image" && !block.src.startsWith(imageDir(slug))) {
+          throw new Error(`Image ${block.src} must live in public${imageDir(slug)}`)
+        }
+      }
       return {
         slug,
         date,
         ...metadata,
-        ...(({ blocks, notes }) => ({ content: blocks, notes }))(parseMarkdownBody(body)),
+        content: blocks,
+        notes,
       }
     } catch (error) {
       if (error instanceof Error) {
