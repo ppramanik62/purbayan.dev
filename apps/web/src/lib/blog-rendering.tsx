@@ -1,6 +1,7 @@
 import type { ReactNode } from "react"
 import type { ContentBlock, Sidenote } from "@/data/blog"
 import { CodeBlock } from "@/components/blog/code-block"
+import { PostFigure } from "@/components/blog/post-figure"
 
 export function renderInlineText(text: string, notes: readonly Sidenote[] = []): ReactNode[] {
   const parts: ReactNode[] = []
@@ -68,22 +69,7 @@ export function renderBlock(
     case "code":
       return <CodeBlock key={index} language={block.language} code={block.code} />
     case "image":
-      return (
-        <figure key={index} className="m-0">
-          <img
-            src={block.src}
-            alt={block.alt}
-            loading="lazy"
-            decoding="async"
-            className="block h-auto max-w-full"
-          />
-          {block.caption && (
-            <figcaption className="mt-2 max-w-[64ch] font-mono text-xs leading-relaxed text-faint">
-              {block.caption}
-            </figcaption>
-          )}
-        </figure>
-      )
+      return <PostFigure key={index} src={block.src} alt={block.alt} caption={block.caption} />
     case "list":
       return (
         <ul key={index} className="max-w-[64ch] list-none p-0">

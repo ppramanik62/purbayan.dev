@@ -103,6 +103,11 @@
   }
 }
 
+/* The page behind an open image modal shouldn't scroll. */
+html:has(dialog[open]) {
+  overflow: hidden;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
