@@ -6,9 +6,11 @@ import { PostFigure } from "@/components/blog/post-figure"
 
 export function renderInlineText(text: string, notes: readonly Sidenote[] = []): ReactNode[] {
   const parts: ReactNode[] = []
-  // Bold, inline code, a sidenote reference [^id], or a link [text](url). The sidenote comes
-  // before the link so [^id] is never read as link text.
-  const regex = /(\*\*(.+?)\*\*|`([^`]+)`|\[\^([\w-]+)\]|\[([^\]]+)\]\(([^)\s]+)\))/g
+  // Bold, inline code, a sidenote reference [^id], a link [text](url), or *italic*. The sidenote
+  // comes before the link so [^id] is never read as link text, and bold before italic so **x**
+  // is never read as two italics.
+  const regex =
+    /(\*\*(.+?)\*\*|`([^`]+)`|\[\^([\w-]+)\]|\[([^\]]+)\]\(([^)\s]+)\)|\*(?!\s)([^*]+?)\*)/g
   let lastIndex = 0
   let match: RegExpExecArray | null
 
@@ -32,6 +34,8 @@ export function renderInlineText(text: string, notes: readonly Sidenote[] = []):
       )
     } else if (match[5]) {
       parts.push(renderLink(match[5], match[6], match.index, notes))
+    } else if (match[7]) {
+      parts.push(<em key={match.index}>{renderInlineText(match[7], notes)}</em>)
     } else if (match[3]) {
       parts.push(
         <code
