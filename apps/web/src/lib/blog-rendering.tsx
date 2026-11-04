@@ -1,11 +1,14 @@
 import type { ReactNode } from "react"
 import type { ContentBlock, Sidenote } from "@/data/blog"
+import { Link } from "react-router-dom"
 import { CodeBlock } from "@/components/blog/code-block"
 import { PostFigure } from "@/components/blog/post-figure"
 
 export function renderInlineText(text: string, notes: readonly Sidenote[] = []): ReactNode[] {
   const parts: ReactNode[] = []
-  const regex = /(\*\*(.+?)\*\*|`([^`]+)`|\[\^([\w-]+)\])/g
+  // Bold, inline code, a sidenote reference [^id], or a link [text](url). The sidenote comes
+  // before the link so [^id] is never read as link text.
+  const regex = /(\*\*(.+?)\*\*|`([^`]+)`|\[\^([\w-]+)\]|\[([^\]]+)\]\(([^)\s]+)\))/g
   let lastIndex = 0
   let match: RegExpExecArray | null
 
@@ -27,6 +30,8 @@ export function renderInlineText(text: string, notes: readonly Sidenote[] = []):
           {number}
         </sup>,
       )
+    } else if (match[5]) {
+      parts.push(renderLink(match[5], match[6], match.index, notes))
     } else if (match[3]) {
       parts.push(
         <code
@@ -46,6 +51,23 @@ export function renderInlineText(text: string, notes: readonly Sidenote[] = []):
   }
 
   return parts
+}
+
+/** Links to this site stay in the app; anything else opens in a new tab. */
+function renderLink(text: string, href: string, key: number, notes: readonly Sidenote[]) {
+  const children = renderInlineText(text, notes)
+  if (href.startsWith("/") && !href.startsWith("//")) {
+    return (
+      <Link key={key} to={href} className="ink-link">
+        {children}
+      </Link>
+    )
+  }
+  return (
+    <a key={key} href={href} target="_blank" rel="noreferrer" className="ink-link">
+      {children}
+    </a>
+  )
 }
 
 export function renderBlock(
