@@ -6,11 +6,12 @@ import { PostFigure } from "@/components/blog/post-figure"
 
 export function renderInlineText(text: string, notes: readonly Sidenote[] = []): ReactNode[] {
   const parts: ReactNode[] = []
-  // Bold, inline code, a sidenote reference [^id], a link [text](url), or *italic*. The sidenote
-  // comes before the link so [^id] is never read as link text, and bold before italic so **x**
-  // is never read as two italics.
+  // Bold, inline code, a sidenote reference [^id], a link [text](url), or *italic* / _italic_.
+  // The sidenote comes before the link so [^id] is never read as link text, and bold before
+  // italic so **x** is never read as two italics. The formatter rewrites *x* as _x_ on commit;
+  // an underscore inside a word, as in write_all, isn't italics.
   const regex =
-    /(\*\*(.+?)\*\*|`([^`]+)`|\[\^([\w-]+)\]|\[([^\]]+)\]\(([^)\s]+)\)|\*(?!\s)([^*]+?)\*)/g
+    /(\*\*(.+?)\*\*|`([^`]+)`|\[\^([\w-]+)\]|\[([^\]]+)\]\(([^)\s]+)\)|\*(?!\s)([^*]+?)\*|(?<!\w)_(?!\s)([^_]+?)_(?!\w))/g
   let lastIndex = 0
   let match: RegExpExecArray | null
 
@@ -34,8 +35,8 @@ export function renderInlineText(text: string, notes: readonly Sidenote[] = []):
       )
     } else if (match[5]) {
       parts.push(renderLink(match[5], match[6], match.index, notes))
-    } else if (match[7]) {
-      parts.push(<em key={match.index}>{renderInlineText(match[7], notes)}</em>)
+    } else if (match[7] || match[8]) {
+      parts.push(<em key={match.index}>{renderInlineText(match[7] ?? match[8], notes)}</em>)
     } else if (match[3]) {
       parts.push(
         <code

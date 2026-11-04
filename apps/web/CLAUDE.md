@@ -43,7 +43,7 @@ bun run og:posts      # draw thumbnails for posts that lack one
 
 **Dividers:** `---` on a line of its own draws a short rule between parts of a post.
 
-**Inline text** (`renderInlineText` in `src/lib/blog-rendering.tsx`, used for paragraphs, list items and sidenotes): `**bold**`, `*italic*`, `` `code` ``, `[^id]` sidenote references and `[text](url)` links. Links starting with `/` go through the router; anything else opens in a new tab.
+**Inline text** (`renderInlineText` in `src/lib/blog-rendering.tsx`, used for paragraphs, list items and sidenotes): `**bold**`, `*italic*` (oxfmt rewrites it as `_italic_` on commit; both work), `` `code` ``, `[^id]` sidenote references and `[text](url)` links. Links starting with `/` go through the router; anything else opens in a new tab.
 
 **Sidenotes:** write `[^id]` in a paragraph or list item and `[^id]: the note` on its own line anywhere in the post. Notes are numbered by first use and sit in the margin beside their paragraph (under it on phones). A reference without a definition, or a definition never used, fails the build.
 
