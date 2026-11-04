@@ -7,6 +7,7 @@ export type ContentBlock =
   | { type: "code"; language: string; code: string }
   | { type: "list"; items: string[] }
   | ({ type: "image" } & PostImage)
+  | { type: "rule" }
 
 export interface BlogPost {
   slug: string
@@ -156,6 +157,12 @@ function parseMarkdownBody(source: string): { blocks: ContentBlock[]; notes: Sid
       continue
     }
 
+    if (trimmed === "---") {
+      blocks.push({ type: "rule" })
+      index++
+      continue
+    }
+
     if (trimmed.startsWith("## ")) {
       blocks.push({ type: "heading", text: trimmed.slice(3).trim() })
       index++
@@ -181,6 +188,7 @@ function parseMarkdownBody(source: string): { blocks: ContentBlock[]; notes: Sid
       const next = lines[index].trim()
       if (
         next === "" ||
+        next === "---" ||
         next.startsWith("## ") ||
         next.startsWith("```") ||
         next.startsWith("- ") ||
@@ -198,7 +206,7 @@ function parseMarkdownBody(source: string): { blocks: ContentBlock[]; notes: Sid
   return { blocks, notes: numberNotes(blocks, definitions) }
 }
 
-/** The text in a block that can hold sidenote references. Code and images hold none. */
+/** The text in a block that can hold sidenote references. Code, images and rules hold none. */
 function textsIn(block: ContentBlock): readonly string[] {
   switch (block.type) {
     case "paragraph":
@@ -208,6 +216,7 @@ function textsIn(block: ContentBlock): readonly string[] {
       return block.items
     case "code":
     case "image":
+    case "rule":
       return []
   }
 }

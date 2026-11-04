@@ -41,6 +41,8 @@ bun run og:posts      # draw thumbnails for posts that lack one
 
 **Images:** a line on its own, `![alt](/blog/<slug>/name.svg "optional caption")`. Files live in `public/blog/<slug>/` (svg, png, jpg, webp, avif or gif; Excalidraw drawings go in as SVG). `src/data/post-image.ts` parses the line; the site rejects missing alt text or a path outside the post's folder, and `scripts/posts.ts` fails the build when the file doesn't exist. The caption shows under the image. `src/components/blog/post-figure.tsx` draws it: clicking the image opens it larger in a native `<dialog>` (Esc or a backdrop click closes it); the expand icon shows on hover, and always on touch screens. Wide images scroll sideways in the modal on phones.
 
+**Dividers:** `---` on a line of its own draws a short rule between parts of a post.
+
 **Inline text** (`renderInlineText` in `src/lib/blog-rendering.tsx`, used for paragraphs, list items and sidenotes): `**bold**`, `*italic*`, `` `code` ``, `[^id]` sidenote references and `[text](url)` links. Links starting with `/` go through the router; anything else opens in a new tab.
 
 **Sidenotes:** write `[^id]` in a paragraph or list item and `[^id]: the note` on its own line anywhere in the post. Notes are numbered by first use and sit in the margin beside their paragraph (under it on phones). A reference without a definition, or a definition never used, fails the build.

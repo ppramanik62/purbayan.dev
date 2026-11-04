@@ -96,6 +96,8 @@ export function renderBlock(
       return <CodeBlock key={index} language={block.language} code={block.code} />
     case "image":
       return <PostFigure key={index} src={block.src} alt={block.alt} caption={block.caption} />
+    case "rule":
+      return <hr key={index} className="my-4 w-24 border-0 border-t border-rule" />
     case "list":
       return (
         <ul key={index} className="max-w-[64ch] list-none p-0">
