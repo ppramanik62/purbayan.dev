@@ -57,7 +57,7 @@ bun run og:posts      # draw thumbnails for posts that lack one
 - Light only. No dark mode.
 - Fonts: Newsreader (`font-serif`, the body) and Spline Sans Mono (`font-mono`, margin notes and labels), from `@fontsource-variable`. Code blocks use the system monospace (`font-code`).
 - `ink-link` is the underlined link style. Use `cn()` from `src/lib/utils.ts` for conditional classes.
-- `src/lib/syntax-highlighter.ts` emits `text-tokyo-*`, `text-muted-foreground` and `text-secondary-foreground`; those colours are defined in `index.css` for the dark code block.
+- `src/lib/syntax-highlighter.ts` emits `text-tokyo-*`, `text-primary`, `text-muted-foreground` and `text-secondary-foreground`; those colours are defined in `index.css` for the dark code block.
 
 ## Conventions
 

@@ -24,11 +24,12 @@
 
   /*
     Syntax colours, in the notebook's inks. src/lib/syntax-highlighter.ts emits
-    `text-tokyo-*`, `text-muted-foreground` and `text-secondary-foreground`, so
-    those names stay.
+    `text-tokyo-*`, `text-primary`, `text-muted-foreground` and
+    `text-secondary-foreground`, so those names stay.
   */
   --color-tokyo-magenta: #9c3626; /* keywords: red pen */
-  --color-tokyo-cyan: #3f5f86; /* types and functions: blue pencil */
+  --color-tokyo-cyan: #3f5f86; /* types: blue pencil */
+  --color-primary: #5f4b8b; /* function names and calls: violet ink */
   --color-tokyo-teal: #3f5f86;
   --color-tokyo-green: #5d7535; /* strings: olive */
   --color-tokyo-orange: #a3601c; /* numbers: ochre */
