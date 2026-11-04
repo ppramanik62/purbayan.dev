@@ -54,7 +54,7 @@ body{position:relative;color:#24211c}
 .rule{position:absolute;top:0;bottom:0;left:150px;width:2px;background:rgba(180,67,47,.38)}
 .line{position:absolute;left:0;right:0;height:1px;background:#ddd4c2}
 .meta{position:absolute;left:200px;top:38px;font:22px M;color:#b4432f}
-h1{position:absolute;left:200px;right:90px;top:50%;transform:translateY(-50%);margin:0;font:italic 500 76px/1.08 N;letter-spacing:-.01em}
+h1{position:absolute;left:200px;right:90px;top:50%;transform:translateY(-50%);margin:0;font:italic 500 76px/1.08 N;letter-spacing:-.01em;text-wrap:pretty}
 .url{position:absolute;left:200px;bottom:40px;font:22px M;color:#8a8170}
 </style></head><body>
 <div class="line" style="top:92px"></div><div class="line" style="bottom:92px"></div><div class="rule"></div>

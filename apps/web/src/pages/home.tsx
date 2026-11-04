@@ -41,7 +41,7 @@ function Thumbnail({ post }: { post: BlogPost }) {
     return (
       <span className={cn(frame, "relative bg-paper")}>
         <span className="absolute inset-y-0 left-[12.5%] w-px bg-pen/40" />
-        <span className="absolute inset-x-[17%] top-1/2 -translate-y-1/2 text-[22px] leading-tight font-medium italic">
+        <span className="absolute inset-x-[17%] top-1/2 -translate-y-1/2 text-[22px] leading-tight font-medium text-pretty italic">
           {post.title}
         </span>
       </span>

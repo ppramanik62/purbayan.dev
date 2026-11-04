@@ -70,7 +70,7 @@ export default function WritingPostPage() {
           </>
         }
       >
-        <h1 className="m-0 max-w-[24ch] font-serif text-[clamp(28px,4.4vw,38px)] leading-[1.15] font-medium italic">
+        <h1 className="m-0 font-serif text-pretty text-[clamp(28px,4.4vw,38px)] leading-[1.15] font-medium italic">
           {post.title}
         </h1>
         <p className="mt-3 max-w-[60ch] text-dim">{post.summary}</p>
