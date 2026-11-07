@@ -5,7 +5,7 @@
     "publicRepos": 67
   },
   "contributions": {
-    "total": 2043,
+    "total": 2061,
     "start": "2025-11-02",
     "counts": [
       4, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0, 0, 0,
@@ -20,19 +20,10 @@
       4, 14, 16, 2, 18, 0, 6, 8, 12, 11, 2, 16, 28, 27, 21, 34, 14, 3, 13, 26, 12, 0, 19, 7, 20, 6,
       9, 29, 15, 4, 17, 0, 11, 8, 6, 12, 12, 12, 7, 0, 4, 5, 51, 63, 7, 0, 0, 0, 0, 13, 27, 10, 33,
       16, 1, 46, 12, 3, 19, 7, 5, 16, 44, 1, 0, 0, 0, 9, 5, 1, 1, 1, 0, 1, 1, 27, 0, 5, 3, 0, 0, 0,
-      1, 0, 0, 1, 0, 9, 15, 48, 7, 2, 11, 11, 1, 2, 9, 21, 26, 9, 6
+      1, 0, 0, 1, 0, 9, 15, 48, 7, 2, 11, 11, 1, 2, 9, 21, 26, 9, 24, 0
     ]
   },
   "repos": [
-    {
-      "name": "purbayan.dev",
-      "description": "My personal site, kept like a paper notebook: projects, experience, writing, reading and open source.",
-      "language": "TypeScript",
-      "stars": 0,
-      "homepage": "https://purbayan.me",
-      "created": "2026-02-16",
-      "pushed": "2026-11-06"
-    },
     {
       "name": "onyxdb",
       "description": "A SQL database written from scratch in Rust.",
@@ -40,7 +31,7 @@
       "stars": 2,
       "homepage": "",
       "created": "2026-10-10",
-      "pushed": "2026-11-05"
+      "pushed": "2026-11-06"
     },
     {
       "name": "database-papers",
@@ -49,7 +40,16 @@
       "stars": 1,
       "homepage": "",
       "created": "2026-10-24",
-      "pushed": "2026-10-29"
+      "pushed": "2026-11-06"
+    },
+    {
+      "name": "purbayan.dev",
+      "description": "My personal site, kept like a paper notebook: projects, experience, writing, reading and open source.",
+      "language": "TypeScript",
+      "stars": 0,
+      "homepage": "https://purbayan.me",
+      "created": "2026-02-16",
+      "pushed": "2026-11-06"
     },
     {
       "name": "yc-jev-bench",
