@@ -45,7 +45,8 @@ function frontmatter(source: string): Record<string, string> {
 
 export function readPosts(): PostMeta[] {
   const posts = readdirSync(postsDir)
-    .filter((file) => file.endsWith(".md"))
+    // Skip hidden files, like the `.#name.md` lock files editors leave beside an open file.
+    .filter((file) => file.endsWith(".md") && !file.startsWith("."))
     .map((file) => {
       const { date, slug } = parsePostFile(file)
       const source = readFileSync(join(postsDir, file), "utf8")
