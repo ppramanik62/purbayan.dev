@@ -1,6 +1,7 @@
 import type { ReactNode } from "react"
-import type { ContentBlock, Sidenote } from "@/data/blog"
+import type { ContentBlock, List, Sidenote } from "@/data/blog"
 import { Link } from "react-router-dom"
+import { cn } from "@/lib/utils"
 import { CodeBlock } from "@/components/blog/code-block"
 import { PostFigure } from "@/components/blog/post-figure"
 
@@ -88,10 +89,14 @@ export function renderBlock(
         </p>
       )
     case "heading":
-      return (
+      return block.level === 2 ? (
         <h2 key={index} className="pt-4 font-serif text-2xl font-normal italic text-ink">
           {block.text}
         </h2>
+      ) : (
+        <h3 key={index} className="pt-2 font-serif text-xl font-medium text-ink">
+          {block.text}
+        </h3>
       )
     case "code":
       return <CodeBlock key={index} language={block.language} code={block.code} />
@@ -99,19 +104,77 @@ export function renderBlock(
       return <PostFigure key={index} src={block.src} alt={block.alt} caption={block.caption} />
     case "rule":
       return <hr key={index} className="my-4 w-24 border-0 border-t border-rule" />
-    case "list":
+    case "table":
+      // Wide tables scroll sideways inside their own box instead of widening the page.
       return (
-        <ul key={index} className="max-w-[64ch] list-none p-0">
-          {block.items.map((item, i) => (
-            // eslint-disable-next-line react/no-array-index-key
-            <li
-              key={i}
-              className="relative my-1.5 pl-[26px] text-dim before:absolute before:left-1.5 before:text-faint before:content-['–']"
-            >
-              {renderInlineText(item, notes)}
-            </li>
-          ))}
-        </ul>
+        <div key={index} className="max-w-[64ch] overflow-x-auto">
+          <table className="w-full table-fixed border-collapse text-left text-[0.92em] leading-snug text-dim">
+            <thead>
+              <tr className="border-b border-ink/40">
+                {block.head.map((cell, i) => (
+                  // eslint-disable-next-line react/no-array-index-key
+                  <th
+                    key={i}
+                    className="py-1.5 pr-5 align-bottom font-mono text-[11px] font-medium tracking-widest text-faint uppercase"
+                  >
+                    {renderInlineText(cell, notes)}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {block.rows.map((row, r) => (
+                // eslint-disable-next-line react/no-array-index-key
+                <tr key={r} className="border-b border-rule">
+                  {row.map((cell, c) => (
+                    <td
+                      // eslint-disable-next-line react/no-array-index-key
+                      key={c}
+                      className={cn("py-2 pr-5 align-top", c === 0 && "text-ink")}
+                    >
+                      {renderInlineText(cell, notes)}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )
+    case "list":
+      return <ListView key={index} list={block} notes={notes} />
   }
+}
+
+/** A `-` or numbered list. A sub-list sits indented under its item, without the gap above it. */
+function ListView({
+  list,
+  notes,
+  nested = false,
+}: {
+  list: List
+  notes: readonly Sidenote[]
+  nested?: boolean
+}) {
+  const Tag = list.ordered ? "ol" : "ul"
+  return (
+    <Tag className={cn("max-w-[64ch] list-none p-0", !nested && "-mt-3")}>
+      {list.items.map((item, i) => (
+        // eslint-disable-next-line react/no-array-index-key
+        <li key={i} className="relative my-0.5 pl-[26px] text-dim">
+          <span
+            aria-hidden
+            className={cn(
+              "absolute text-faint",
+              list.ordered ? "left-0 w-[19px] text-right" : "left-1.5",
+            )}
+          >
+            {list.ordered ? `${i + 1}.` : "–"}
+          </span>
+          {renderInlineText(item.text, notes)}
+          {item.sub && <ListView list={item.sub} notes={notes} nested />}
+        </li>
+      ))}
+    </Tag>
+  )
 }

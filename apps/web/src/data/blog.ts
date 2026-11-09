@@ -3,11 +3,23 @@ import { imageDir, isImageLine, parseImageLine, type PostImage } from "./post-im
 
 export type ContentBlock =
   | { type: "paragraph"; text: string }
-  | { type: "heading"; text: string }
+  | { type: "heading"; level: 2 | 3; text: string }
   | { type: "code"; language: string; code: string }
-  | { type: "list"; items: string[] }
+  | ({ type: "list" } & List)
+  | { type: "table"; head: string[]; rows: string[][] }
   | ({ type: "image" } & PostImage)
   | { type: "rule" }
+
+export interface List {
+  ordered: boolean
+  items: ListItem[]
+}
+
+/** A list item, with the sub-list indented under it, if any. The parser nests one level deep. */
+export interface ListItem {
+  text: string
+  sub: List | null
+}
 
 export interface BlogPost {
   slug: string
@@ -30,6 +42,20 @@ export interface Sidenote {
 /** `[^id]` in the text points at a `[^id]: note` line elsewhere in the post. */
 export const NOTE_REF = /\[\^([\w-]+)\]/g
 const NOTE_DEF = /^\[\^([\w-]+)\]:\s+(.+)$/
+/** A table's second line, like `|---|:---:|`. */
+const TABLE_DIVIDER = /^\|(\s*:?-+:?\s*\|)+$/
+
+/** `| a | b |` → ["a", "b"]. */
+function tableCells(line: string): string[] {
+  return line
+    .trim()
+    .replace(/^\||\|$/g, "")
+    .split("|")
+    .map((cell) => cell.trim())
+}
+
+/** `- item` or `1. item`. Group 1 is the number, when there is one. */
+const LIST_ITEM = /^(?:-|(\d+)\.)\s+/
 
 interface BlogFrontmatter {
   title: string
@@ -163,21 +189,76 @@ function parseMarkdownBody(source: string): { blocks: ContentBlock[]; notes: Sid
       continue
     }
 
-    if (trimmed.startsWith("## ")) {
-      blocks.push({ type: "heading", text: trimmed.slice(3).trim() })
+    if (trimmed.startsWith("# ")) {
+      throw new Error(
+        `"${trimmed}": the title comes from the frontmatter; use "## " and "### " for headings in the body`,
+      )
+    }
+
+    if (trimmed.startsWith("### ")) {
+      blocks.push({ type: "heading", level: 3, text: trimmed.slice(4).trim() })
       index++
       continue
     }
 
-    if (trimmed.startsWith("- ")) {
-      const items: string[] = []
+    if (trimmed.startsWith("## ")) {
+      blocks.push({ type: "heading", level: 2, text: trimmed.slice(3).trim() })
+      index++
+      continue
+    }
 
-      while (index < lines.length && lines[index].trim().startsWith("- ")) {
-        items.push(lines[index].trim().slice(2).trim())
+    if (trimmed.startsWith("|")) {
+      const head = tableCells(trimmed)
+      if (!TABLE_DIVIDER.test(lines[index + 1]?.trim().replaceAll(" ", "") ?? "")) {
+        throw new Error(`Table "${trimmed}" needs a |---|---| line under its header`)
+      }
+      index += 2
+
+      const rows: string[][] = []
+      while (index < lines.length && lines[index].trim().startsWith("|")) {
+        const row = tableCells(lines[index])
+        if (row.length !== head.length) {
+          throw new Error(
+            `Table row "${lines[index].trim()}" has ${row.length} cells, not ${head.length}`,
+          )
+        }
+        rows.push(row)
         index++
       }
 
-      blocks.push({ type: "list", items })
+      blocks.push({ type: "table", head, rows })
+      continue
+    }
+
+    const listStart = trimmed.match(LIST_ITEM)
+    if (listStart) {
+      // A list is one kind throughout: `- ` items or numbered items, not a mix. Items
+      // indented with spaces belong to a sub-list under the item above them.
+      const ordered = listStart[1] !== undefined
+      const items: ListItem[] = []
+
+      while (index < lines.length) {
+        const line = lines[index]
+        const item = line.trim().match(LIST_ITEM)
+        if (!item) break
+        const text = line.trim().slice(item[0].length).trim()
+        const subOrdered = item[1] !== undefined
+
+        if (/^\s/.test(line) && items.length > 0) {
+          const parent = items[items.length - 1]
+          parent.sub ??= { ordered: subOrdered, items: [] }
+          if (parent.sub.ordered !== subOrdered) {
+            throw new Error(`List item "${line.trim()}" mixes dashes and numbers in one sub-list`)
+          }
+          parent.sub.items.push({ text, sub: null })
+        } else {
+          if (subOrdered !== ordered) break
+          items.push({ text, sub: null })
+        }
+        index++
+      }
+
+      blocks.push({ type: "list", ordered, items })
       continue
     }
 
@@ -190,8 +271,10 @@ function parseMarkdownBody(source: string): { blocks: ContentBlock[]; notes: Sid
         next === "" ||
         next === "---" ||
         next.startsWith("## ") ||
+        next.startsWith("### ") ||
         next.startsWith("```") ||
-        next.startsWith("- ") ||
+        LIST_ITEM.test(next) ||
+        next.startsWith("|") ||
         isImageLine(next)
       ) {
         break
@@ -213,7 +296,12 @@ function textsIn(block: ContentBlock): readonly string[] {
     case "heading":
       return [block.text]
     case "list":
-      return block.items
+      return block.items.flatMap((item) => [
+        item.text,
+        ...(item.sub?.items ?? []).map((sub) => sub.text),
+      ])
+    case "table":
+      return [...block.head, ...block.rows.flat()]
     case "code":
     case "image":
     case "rule":
