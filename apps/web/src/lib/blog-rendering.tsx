@@ -1,9 +1,31 @@
-import type { ReactNode } from "react"
+import { Fragment, type ReactNode } from "react"
 import type { ContentBlock, List, Sidenote } from "@/data/blog"
 import { Link } from "react-router-dom"
 import { cn } from "@/lib/utils"
 import { CodeBlock } from "@/components/blog/code-block"
 import { PostFigure } from "@/components/blog/post-figure"
+
+/**
+ * Browsers may break a line right after a slash, splitting "I/O" into "I/" and "O".
+ * Short slashed words like I/O or read/write are kept whole.
+ */
+function keepSlashesWhole(text: string, key: number): ReactNode {
+  const parts = text.split(/(\w+(?:\/\w+)+)/)
+  if (parts.length === 1) return text
+  return (
+    <Fragment key={key}>
+      {parts.map((part, i) =>
+        i % 2 === 1 ? (
+          <span key={i} className="whitespace-nowrap">
+            {part}
+          </span>
+        ) : (
+          part
+        ),
+      )}
+    </Fragment>
+  )
+}
 
 export function renderInlineText(text: string, notes: readonly Sidenote[] = []): ReactNode[] {
   const parts: ReactNode[] = []
@@ -18,7 +40,7 @@ export function renderInlineText(text: string, notes: readonly Sidenote[] = []):
 
   while ((match = regex.exec(text)) !== null) {
     if (match.index > lastIndex) {
-      parts.push(text.slice(lastIndex, match.index))
+      parts.push(keepSlashesWhole(text.slice(lastIndex, match.index), lastIndex))
     }
 
     if (match[2]) {
@@ -53,7 +75,7 @@ export function renderInlineText(text: string, notes: readonly Sidenote[] = []):
   }
 
   if (lastIndex < text.length) {
-    parts.push(text.slice(lastIndex))
+    parts.push(keepSlashesWhole(text.slice(lastIndex), lastIndex))
   }
 
   return parts
