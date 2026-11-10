@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "bun run typecheck && vite build && bun scripts/prerender-posts.ts",
+    "build": "bun run typecheck && bun scripts/check-posts.ts && vite build && bun scripts/prerender-posts.ts",
     "preview": "vite preview",
     "typecheck": "tsc -b --noEmit",
     "sync:github": "bun scripts/sync-github.ts",

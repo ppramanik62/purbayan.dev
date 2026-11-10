@@ -2,7 +2,7 @@
 import { existsSync, readdirSync, readFileSync } from "node:fs"
 import { join } from "node:path"
 import { assertUniqueSlugs, parsePostFile } from "../src/data/post-file"
-import { isImageLine, parseImageLine } from "../src/data/post-image"
+import { imageDir, isImageLine, parseImageLine } from "../src/data/post-image"
 
 export interface PostMeta {
   slug: string
@@ -17,8 +17,12 @@ export interface PostMeta {
 const postsDir = join(import.meta.dir, "../src/content/blog")
 const publicDir = join(import.meta.dir, "../public")
 
-/** Fails if a post points at an image that isn't in public/. Lines inside code fences are skipped. */
-function checkImages(file: string, source: string) {
+/**
+ * Fails if a post points at an image outside its own folder, or at one that doesn't exist.
+ * The site makes the same folder check when it loads, but there a bad path blanks every page,
+ * so the build catches it first. Lines inside code fences are skipped.
+ */
+function checkImages(file: string, slug: string, source: string) {
   let inFence = false
   for (const line of source.split("\n")) {
     if (line.trim().startsWith("```")) inFence = !inFence
@@ -29,6 +33,8 @@ function checkImages(file: string, source: string) {
     } catch (error) {
       throw new Error(`${file}: ${error instanceof Error ? error.message : error}`)
     }
+    if (!src.startsWith(imageDir(slug)))
+      throw new Error(`${file}: image ${src} must live in public${imageDir(slug)}`)
     if (!existsSync(join(publicDir, src)))
       throw new Error(`${file}: image public${src} does not exist`)
   }
@@ -52,7 +58,7 @@ export function readPosts(): PostMeta[] {
     .map((file) => {
       const { date, slug } = parsePostFile(file)
       const source = readFileSync(join(postsDir, file), "utf8")
-      checkImages(file, source)
+      checkImages(file, slug, source)
       const fm = frontmatter(source)
       for (const key of ["title", "summary", "readingTime"]) {
         if (!fm[key]) throw new Error(`${file}: frontmatter needs "${key}"`)
