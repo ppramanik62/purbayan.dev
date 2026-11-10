@@ -45,7 +45,7 @@ function shortDate(iso: string) {
   })
 }
 
-function page(title: string, meta: string) {
+function page(title: string, meta: string, series: string | null) {
   return `<!doctype html><html><head><meta charset="utf-8"><style>
 @font-face{font-family:N;font-style:italic;font-weight:200 800;src:url(file://${serif}/newsreader-latin-opsz-italic.woff2)}
 @font-face{font-family:M;font-weight:300 700;src:url(file://${mono}/spline-sans-mono-latin-wght-normal.woff2)}
@@ -54,12 +54,14 @@ body{position:relative;color:#24211c}
 .rule{position:absolute;top:0;bottom:0;left:150px;width:2px;background:rgba(180,67,47,.38)}
 .line{position:absolute;left:0;right:0;height:1px;background:#ddd4c2}
 .meta{position:absolute;left:200px;top:38px;font:22px M;color:#b4432f}
-h1{position:absolute;left:200px;right:90px;top:50%;transform:translateY(-50%);margin:0;font:italic 500 76px/1.08 N;letter-spacing:-.01em;text-wrap:pretty}
+.head{position:absolute;left:200px;right:90px;top:50%;transform:translateY(-50%)}
+h1{margin:0;font:italic 500 76px/1.08 N;letter-spacing:-.01em;text-wrap:pretty}
+.series{margin-top:26px;font:24px M;color:#8a8170}
 .url{position:absolute;left:200px;bottom:40px;font:22px M;color:#8a8170}
 </style></head><body>
 <div class="line" style="top:92px"></div><div class="line" style="bottom:92px"></div><div class="rule"></div>
 <div class="meta">${escape(meta)}</div>
-<h1>${escape(title)}</h1>
+<div class="head"><h1>${escape(title)}</h1>${series ? `<div class="series">${escape(series)}</div>` : ""}</div>
 <div class="url">purbayan.me</div>
 </body></html>`
 }
@@ -74,7 +76,10 @@ for (const post of readPosts()) {
   if (existsSync(out) && !force) continue
 
   const html = join(work, `${post.slug}.html`)
-  writeFileSync(html, page(post.title, `${shortDate(post.date)} · ${post.readingTime}`))
+  writeFileSync(
+    html,
+    page(post.title, `${shortDate(post.date)} · ${post.readingTime}`, post.seriesLabel),
+  )
 
   const run = Bun.spawnSync([
     bin,

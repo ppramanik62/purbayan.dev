@@ -10,6 +10,8 @@ export interface PostMeta {
   date: string
   summary: string
   readingTime: string
+  /** "part 1 of Buffer Managers 101" for a post in a series, else null. */
+  seriesLabel: string | null
 }
 
 const postsDir = join(import.meta.dir, "../src/content/blog")
@@ -61,6 +63,7 @@ export function readPosts(): PostMeta[] {
         date,
         summary: fm.summary,
         readingTime: fm.readingTime,
+        seriesLabel: fm.series && fm.part ? `part ${fm.part} of ${fm.series}` : null,
       }
     })
   assertUniqueSlugs(posts)

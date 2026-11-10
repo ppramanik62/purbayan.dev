@@ -1,6 +1,6 @@
 import { useMemo, type ReactNode } from "react"
 import { useParams, Link } from "react-router-dom"
-import { blogPosts, notesIn, type Sidenote } from "@/data/blog"
+import { blogPosts, notesIn, seriesParts, type BlogPost, type Sidenote } from "@/data/blog"
 import { shortDate } from "@/lib/dates"
 import { renderBlock, renderInlineText } from "@/lib/blog-rendering"
 import { cn } from "@/lib/utils"
@@ -62,6 +62,57 @@ function Block({
   )
 }
 
+/**
+ * The end of a post in a series: every published part, this one marked, then links to the
+ * parts either side. Shown once a series has at least two parts out.
+ */
+function SeriesNav({ post, parts }: { post: BlogPost; parts: BlogPost[] }) {
+  const index = parts.indexOf(post)
+  const prev = parts[index - 1]
+  const next = parts[index + 1]
+  return (
+    <>
+      <Gap />
+      <Row margin={post.series?.name} pen>
+        <ol className="m-0 list-none p-0">
+          {parts.map((part) => (
+            <li key={part.slug} className="flex gap-3 py-0.5">
+              <span className="w-5 shrink-0 text-right font-mono text-xs leading-[2.4] text-faint">
+                {part.series?.part}.
+              </span>
+              {part === post ? (
+                <span className="text-ink">
+                  {part.title} <span className="font-mono text-xs text-pen">· reading</span>
+                </span>
+              ) : (
+                <Link to={`/writing/${part.slug}`} className="text-dim hover:text-ink">
+                  {part.title}
+                </Link>
+              )}
+            </li>
+          ))}
+        </ol>
+        {(prev || next) && (
+          <p className="mt-4 mb-0 flex flex-wrap justify-between gap-x-6 gap-y-2">
+            {prev ? (
+              <Link to={`/writing/${prev.slug}`} className="ink-link text-dim">
+                ← {prev.title}
+              </Link>
+            ) : (
+              <span />
+            )}
+            {next && (
+              <Link to={`/writing/${next.slug}`} className="ink-link text-dim">
+                {next.title} →
+              </Link>
+            )}
+          </p>
+        )}
+      </Row>
+    </>
+  )
+}
+
 export default function WritingPostPage() {
   const { slug } = useParams<{ slug: string }>()
   const post = blogPosts.find((p) => p.slug === slug)
@@ -69,6 +120,8 @@ export default function WritingPostPage() {
     () => post?.content.filter((block): block is OutlineEntry => block.type === "heading") ?? [],
     [post],
   )
+
+  const parts = post ? seriesParts(post) : []
 
   usePageMeta({
     title: post?.title ?? "Not found",
@@ -104,6 +157,13 @@ export default function WritingPostPage() {
               {shortDate(post.date)}
               <br />
               {post.readingTime}
+              {post.series && (
+                <>
+                  <br />
+                  part {post.series.part}
+                  {parts.length > 1 && ` of ${parts.length}`}
+                </>
+              )}
             </>
           }
         >
@@ -126,6 +186,7 @@ export default function WritingPostPage() {
           ))}
         </div>
       </div>
+      {parts.length > 1 && post.series && <SeriesNav post={post} parts={parts} />}
       <Gap />
       <Row>
         <Link to="/writing" className="ink-link text-dim">

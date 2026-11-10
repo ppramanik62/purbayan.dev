@@ -36,9 +36,17 @@ export interface BlogPost {
   tags: string[]
   summary: string
   readingTime: string
+  /** Set when the post is one part of a series, from `series` and `part` in its frontmatter. */
+  series: Series | null
   content: ContentBlock[]
   /** Sidenotes, numbered in the order they're first referenced. */
   notes: Sidenote[]
+}
+
+export interface Series {
+  name: string
+  /** 1 for the first part. */
+  part: number
 }
 
 export interface Sidenote {
@@ -84,6 +92,7 @@ interface BlogFrontmatter {
   tags: string[]
   summary: string
   readingTime: string
+  series: Series | null
 }
 
 const rawPosts = import.meta.glob<string>("../content/blog/*.md", {
@@ -136,6 +145,7 @@ function parseFrontmatter(source: string): { metadata: BlogFrontmatter; body: st
     tags: requireStringArray(values, "tags"),
     summary: requireString(values, "summary"),
     readingTime: requireString(values, "readingTime"),
+    series: optionalSeries(values),
   }
 
   return { metadata, body }
@@ -147,6 +157,19 @@ function requireString(values: Record<string, string | string[]>, key: string): 
     throw new Error(`Blog post frontmatter requires string "${key}"`)
   }
   return value
+}
+
+/** `series` and `part` come as a pair: the series' name, and this post's place in it. */
+function optionalSeries(values: Record<string, string | string[]>): Series | null {
+  const { series: name, part } = values
+  if (name === undefined && part === undefined) return null
+  if (typeof name !== "string" || name.length === 0 || typeof part !== "string") {
+    throw new Error('Blog post frontmatter needs both "series" and "part", or neither')
+  }
+  if (!/^[1-9]\d*$/.test(part)) {
+    throw new Error(`Blog post frontmatter "part" must be 1, 2, 3…, not "${part}"`)
+  }
+  return { name, part: Number(part) }
 }
 
 function requireStringArray(values: Record<string, string | string[]>, key: string): string[] {
@@ -406,3 +429,21 @@ export const blogPosts: BlogPost[] = Object.entries(rawPosts)
   .sort((a, b) => b.date.localeCompare(a.date))
 
 assertUniqueSlugs(blogPosts)
+
+/** The published parts of a post's series, in order, or none when it isn't in one. */
+export function seriesParts(post: BlogPost): BlogPost[] {
+  const { series } = post
+  if (!series) return []
+  return blogPosts
+    .filter((p) => p.series?.name === series.name)
+    .sort((a, b) => (a.series?.part ?? 0) - (b.series?.part ?? 0))
+}
+
+for (const post of blogPosts) {
+  const twin = seriesParts(post).find((p) => p !== post && p.series?.part === post.series?.part)
+  if (twin) {
+    throw new Error(
+      `"${post.title}" and "${twin.title}" are both part ${post.series?.part} of "${post.series?.name}"`,
+    )
+  }
+}
