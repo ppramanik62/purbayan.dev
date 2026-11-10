@@ -13,7 +13,7 @@ It's in three parts:
 
 1. **What a buffer pool is** (this one): why databases cache their own pages, and what's inside the cache.
 2. **Choosing what to evict** (coming soon): which page to give up when memory is full.
-3. **Getting pages to disk safely** (coming soon): when a changed page may be written, and why the order matters.
+3. **Getting pages to disk safely** (coming soon): when a changed page may be written, and why to be careful about the order.
 
 ---
 
@@ -35,16 +35,16 @@ The data is almost always much bigger than the pool, so it fills up quickly, and
 
 Now the whole topic comes down to two questions:
 
-1. **Which page do I give up** when I need room? That's the eviction policy, and Part 2.
-2. **When is a changed page allowed to reach disk?** That's about crash safety and the log, and Part 3.
+1. **Which page do I give up** when I need room? That's the eviction policy (Part 2).
+2. **When is a changed page allowed to reach disk?** That's about crash safety and the log (Part 3).
 
-The first one is about speed. The second one is about correctness.
+Get the first wrong and the database is slow. Get the second wrong and it loses data.
 
-One assumption sits under all of this: changes only flow one way, from memory to disk. Nothing else is allowed to change the file behind the pool's back. If something did, the copies in memory would silently go stale.
+All of this assumes changes only flow one way, from memory to disk. Nothing else is allowed to change the file behind the pool's back. If something did, the copies in memory would silently go stale.
 
-### Three views of the same data
+### Three copies of a page
 
-This is the big picture of all of this:
+At any moment a page can exist in three places:
 
 - the **data file** is behind: it holds older versions of pages
 - the **log** is ahead: it holds changes that may not be in the file yet
