@@ -112,11 +112,19 @@ export function renderBlock(
       )
     case "heading":
       return block.level === 2 ? (
-        <h2 key={index} className="pt-4 font-serif text-2xl font-normal italic text-ink">
+        <h2
+          key={index}
+          id={block.id}
+          className="scroll-mt-8 pt-4 font-serif text-2xl font-normal italic text-ink"
+        >
           {block.text}
         </h2>
       ) : (
-        <h3 key={index} className="pt-2 font-serif text-xl font-medium text-ink">
+        <h3
+          key={index}
+          id={block.id}
+          className="scroll-mt-8 pt-2 font-serif text-xl font-medium text-ink"
+        >
           {block.text}
         </h3>
       )

@@ -108,8 +108,11 @@ export function Layout() {
   const { pathname } = useLocation()
   const underline = useNavUnderline(pathname)
 
+  // A new page starts at the top, or at the section its link names (`/writing/post#section`).
   useEffect(() => {
-    window.scrollTo(0, 0)
+    const target = document.getElementById(decodeURIComponent(window.location.hash.slice(1)))
+    if (target) target.scrollIntoView()
+    else window.scrollTo(0, 0)
   }, [pathname])
 
   return (

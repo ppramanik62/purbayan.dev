@@ -3,7 +3,15 @@ import { imageDir, isImageLine, parseImageLine, type PostImage } from "./post-im
 
 export type ContentBlock =
   | { type: "paragraph"; text: string }
-  | { type: "heading"; level: 2 | 3; text: string }
+  | {
+      type: "heading"
+      level: 2 | 3
+      text: string
+      /** The anchor for links to this heading, made from its text. */
+      id: string
+      /** "§2" for a `## ` heading, "§2.1" for a `### ` under it. */
+      number: string
+    }
   | { type: "code"; language: string; code: string }
   | ({ type: "list" } & List)
   | { type: "table"; head: string[]; rows: string[][] }
@@ -52,6 +60,20 @@ function tableCells(line: string): string[] {
     .replace(/^\||\|$/g, "")
     .split("|")
     .map((cell) => cell.trim())
+}
+
+/** "Why not mmap ??" → "why-not-mmap". A repeated heading gets "-2", "-3" so links stay unique. */
+function headingId(text: string, taken: Set<string>): string {
+  const base =
+    text
+      .toLowerCase()
+      .replace(/[^a-z0-9\s-]/g, "")
+      .trim()
+      .replace(/[\s-]+/g, "-") || "section"
+  let id = base
+  for (let n = 2; taken.has(id); n++) id = `${base}-${n}`
+  taken.add(id)
+  return id
 }
 
 /** `- item` or `1. item`. Group 1 is the number, when there is one. */
@@ -137,6 +159,9 @@ function requireStringArray(values: Record<string, string | string[]>, key: stri
 
 function parseMarkdownBody(source: string): { blocks: ContentBlock[]; notes: Sidenote[] } {
   const blocks: ContentBlock[] = []
+  const headingIds = new Set<string>()
+  let section = 0
+  let subsection = 0
   const definitions = new Map<string, string>()
   let inFence = false
   const lines = source.split("\n").filter((line) => {
@@ -196,13 +221,30 @@ function parseMarkdownBody(source: string): { blocks: ContentBlock[]; notes: Sid
     }
 
     if (trimmed.startsWith("### ")) {
-      blocks.push({ type: "heading", level: 3, text: trimmed.slice(4).trim() })
+      const text = trimmed.slice(4).trim()
+      subsection++
+      blocks.push({
+        type: "heading",
+        level: 3,
+        text,
+        id: headingId(text, headingIds),
+        number: `§${section}.${subsection}`,
+      })
       index++
       continue
     }
 
     if (trimmed.startsWith("## ")) {
-      blocks.push({ type: "heading", level: 2, text: trimmed.slice(3).trim() })
+      const text = trimmed.slice(3).trim()
+      section++
+      subsection = 0
+      blocks.push({
+        type: "heading",
+        level: 2,
+        text,
+        id: headingId(text, headingIds),
+        number: `§${section}`,
+      })
       index++
       continue
     }
