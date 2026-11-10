@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useLayoutEffect, useRef, useState } from "react"
 import { NavLink, Outlet, useLocation, Link } from "react-router-dom"
 import { SOCIAL } from "@/data/social-links"
 import { clock, todayLong } from "@/lib/dates"
@@ -22,17 +22,91 @@ const FOOT_LINKS = [
   { label: "resume", href: "/resume/resume.pdf" },
 ] as const
 
+/**
+ * Kolkata time. When the minute turns, the digits that changed pop in (transitions.dev's
+ * number pop-in). Keying each digit by its place and value remounts only the changed ones,
+ * which replays their animation; the first render doesn't animate.
+ */
 function Clock() {
   const [time, setTime] = useState(clock)
+  const [ticked, setTicked] = useState(false)
   useEffect(() => {
-    const id = setInterval(() => setTime(clock()), 30_000)
+    const id = setInterval(() => {
+      const next = clock()
+      setTime((prev) => {
+        if (prev !== next) setTicked(true)
+        return next
+      })
+    }, 30_000)
     return () => clearInterval(id)
   }, [])
-  return <span>{time} IST</span>
+  const chars = [...time]
+  return (
+    <span>
+      <span className={ticked ? "t-digit-group is-animating" : "t-digit-group"}>
+        {chars.map((ch, i) => (
+          <span
+            key={`${i}${ch}`}
+            className="t-digit"
+            data-stagger={i === chars.length - 2 ? "1" : i === chars.length - 1 ? "2" : undefined}
+          >
+            {ch}
+          </span>
+        ))}
+      </span>{" "}
+      IST
+    </span>
+  )
+}
+
+/**
+ * The pen underline under the current tab slides to the new one on navigation
+ * (transitions.dev's tabs sliding). It snaps into place on first paint and on resize,
+ * and fades out on pages outside the tabs.
+ */
+function useNavUnderline(pathname: string) {
+  const nav = useRef<HTMLElement>(null)
+  const line = useRef<HTMLSpanElement>(null)
+  const placed = useRef(false)
+
+  // Put the line under the current tab: sliding there, or snapping (first paint, resize).
+  const move = (animate: boolean) => {
+    const bar = line.current
+    const active = nav.current?.querySelector<HTMLElement>('a[aria-current="page"]')
+    if (!bar) return
+    if (!active) {
+      bar.style.opacity = "0"
+      return
+    }
+    if (!animate) bar.style.transition = "none"
+    bar.style.opacity = "1"
+    bar.style.transform = `translate(${active.offsetLeft}px, ${active.offsetTop + active.offsetHeight - 1.5}px)`
+    bar.style.width = `${active.offsetWidth}px`
+    if (!animate) {
+      void bar.offsetWidth
+      bar.style.transition = ""
+    }
+  }
+
+  useLayoutEffect(() => {
+    move(placed.current)
+    placed.current = true
+  }, [pathname])
+
+  useEffect(() => {
+    const snap = () => move(false)
+    window.addEventListener("resize", snap)
+    // Webfonts change the tabs' widths once they load.
+    void document.fonts.ready.then(snap)
+    return () => window.removeEventListener("resize", snap)
+  }, [])
+
+  return { nav, line }
 }
 
 export function Layout() {
   const { pathname } = useLocation()
+  const underline = useNavUnderline(pathname)
 
   useEffect(() => {
     window.scrollTo(0, 0)
@@ -56,7 +130,15 @@ export function Layout() {
         >
           Purbayan Pramanik
         </Link>
-        <nav className="col-start-2 mt-4 flex flex-wrap gap-x-[22px] gap-y-1 text-[17px] max-[680px]:col-start-1">
+        <nav
+          ref={underline.nav}
+          className="relative col-start-2 mt-4 flex flex-wrap gap-x-[22px] gap-y-1 text-[17px] max-[680px]:col-start-1"
+        >
+          <span
+            ref={underline.line}
+            aria-hidden
+            className="t-tabs-pill h-[1.5px] bg-pen opacity-0"
+          />
           {NAV.map((item) => (
             <NavLink
               key={item.to}
@@ -64,8 +146,8 @@ export function Layout() {
               end={item.to === "/"}
               className={({ isActive }) =>
                 cn(
-                  "border-b-[1.5px] pb-0.5 transition-colors",
-                  isActive ? "border-pen text-ink" : "border-transparent text-dim hover:text-ink",
+                  "pb-[3.5px] transition-colors duration-(--tabs-dur) ease-(--tabs-ease)",
+                  isActive ? "text-ink" : "text-dim hover:text-ink",
                 )
               }
             >

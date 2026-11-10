@@ -30,17 +30,20 @@ export function CodeBlock({ language, code }: { language: string; code: string }
 
   return (
     <div className="group relative rounded-sm border border-rule bg-code text-code-ink">
-      <div className="absolute top-2 right-2 flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-150">
+      <div className="absolute top-2 right-2 flex items-center gap-2 opacity-0 transition-opacity group-hover:opacity-100">
         <span className="rounded-xs px-2 py-0.5 font-code text-xs text-code-ink/60">
           {language}
         </span>
         <button
           type="button"
           onClick={handleCopy}
-          className="rounded-xs p-1 text-code-ink/60 transition-colors duration-150 hover:text-code-ink"
-          aria-label="Copy code"
+          className="rounded-xs p-1 text-code-ink/60 transition-colors hover:text-code-ink"
+          aria-label={copied ? "Copied" : "Copy code"}
         >
-          {copied ? <Check className="size-3.5 text-tokyo-green" /> : <Copy className="size-3.5" />}
+          <span className="t-icon-swap" data-state={copied ? "b" : "a"}>
+            <Copy className="t-icon size-3.5" data-icon="a" />
+            <Check className="t-icon size-3.5 text-tokyo-green" data-icon="b" />
+          </span>
         </button>
       </div>
       <pre className="p-4 overflow-x-auto">
