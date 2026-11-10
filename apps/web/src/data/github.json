@@ -5,7 +5,7 @@
     "publicRepos": 67
   },
   "contributions": {
-    "total": 2063,
+    "total": 2069,
     "start": "2025-11-09",
     "counts": [
       0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 4, 0, 8, 8, 1,
@@ -20,18 +20,18 @@
       8, 12, 11, 2, 16, 28, 27, 21, 34, 14, 3, 13, 26, 12, 0, 19, 7, 20, 6, 9, 29, 15, 4, 17, 0, 11,
       8, 6, 12, 12, 12, 7, 0, 4, 5, 51, 63, 7, 0, 0, 0, 0, 13, 27, 10, 33, 16, 1, 46, 12, 3, 19, 7,
       5, 16, 44, 1, 0, 0, 0, 9, 5, 1, 1, 1, 0, 1, 1, 27, 0, 5, 3, 0, 0, 0, 1, 0, 0, 1, 0, 9, 15, 48,
-      7, 2, 11, 11, 1, 2, 9, 21, 26, 9, 24, 2, 7, 0
+      7, 2, 11, 11, 1, 2, 9, 21, 26, 9, 24, 2, 7, 6, 0
     ]
   },
   "repos": [
     {
-      "name": "onyxdb",
-      "description": "A SQL database written from scratch in Rust.",
-      "language": "Rust",
-      "stars": 5,
-      "homepage": "",
-      "created": "2026-10-10",
-      "pushed": "2026-11-08"
+      "name": "purbayan.dev",
+      "description": "My personal site, kept like a paper notebook: projects, experience, writing, reading and open source.",
+      "language": "TypeScript",
+      "stars": 0,
+      "homepage": "https://purbayan.me",
+      "created": "2026-02-16",
+      "pushed": "2026-11-09"
     },
     {
       "name": "engineering-notes",
@@ -40,15 +40,15 @@
       "stars": 1,
       "homepage": "",
       "created": "2026-10-24",
-      "pushed": "2026-11-08"
+      "pushed": "2026-11-09"
     },
     {
-      "name": "purbayan.dev",
-      "description": "My personal site, kept like a paper notebook: projects, experience, writing, reading and open source.",
-      "language": "TypeScript",
-      "stars": 0,
-      "homepage": "https://purbayan.me",
-      "created": "2026-02-16",
+      "name": "onyxdb",
+      "description": "A SQL database written from scratch in Rust.",
+      "language": "Rust",
+      "stars": 9,
+      "homepage": "",
+      "created": "2026-10-10",
       "pushed": "2026-11-08"
     },
     {
@@ -73,7 +73,7 @@
       "name": "mdt",
       "description": "A fast, terminal-based markdown viewer and editor built with Rust",
       "language": "Rust",
-      "stars": 12,
+      "stars": 13,
       "homepage": "https://mdt.purbayan.me",
       "created": "2026-03-14",
       "pushed": "2026-08-11"
